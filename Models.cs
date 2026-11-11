@@ -296,7 +296,7 @@ namespace MEABasicSaveEditor
             set { _quantity = Math.Max(1, value); OnPropertyChanged(); }
         }
 
-        public Gibbed.MassEffectAndromeda.SaveFormats.Items.ItemData ItemData { get; set; }
+        public MEA.SaveFormats.Items.ItemData ItemData { get; set; }
         public bool IsNewlyAdded { get; set; }
         public static Action<ArmoryItemModel, int> OnTierChangeRequested;
 
@@ -583,7 +583,7 @@ namespace MEABasicSaveEditor
         public string Name { get; set; }
         public string PartitionName { get; set; }
         public int Tier { get; set; }
-        public Gibbed.MassEffectAndromeda.GameInfo.ItemType ItemType { get; set; }
+        public MEA.GameInfo.ItemType ItemType { get; set; }
 
         public int TierRank
         {

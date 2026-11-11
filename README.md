@@ -83,6 +83,6 @@ Governed by the **RoxasSmithSolutions (RSS) Community Software License v2.0** un
 
 ## 🙏 Acknowledgements
 
-* **Rick Gibbed (gibbed):** For the inspiration to create a dedicated save editor for *Mass Effect: Andromeda* following his legendary Trilogy Save Editor for ME 1–3.
+* **Mass Effect Andromeda Modding Community:** For research into Andromeda save structures and Frostbite 3 file formats.
 * **BioWare & Electronic Arts:** For creating the *Mass Effect* universe.
 * The Mass Effect modding community for their continued support.

@@ -362,8 +362,8 @@ namespace MEABasicSaveEditor
             if (item.ItemData != null)
             {
                 item.ItemData.PartitionName = item.PartitionName;
-                if (Gibbed.MassEffectAndromeda.GameInfo.InfoManager.Items != null &&
-                    Gibbed.MassEffectAndromeda.GameInfo.InfoManager.Items.TryGetValue(item.PartitionName, out var def))
+                if (MEA.GameInfo.InfoManager.Items != null &&
+                    MEA.GameInfo.InfoManager.Items.TryGetValue(item.PartitionName, out var def))
                 {
                     SaveManager.SetItemDefinition(item.ItemData, def);
                 }

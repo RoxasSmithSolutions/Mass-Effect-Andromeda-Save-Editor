@@ -4,17 +4,17 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Gibbed.MassEffectAndromeda.FileFormats;
-using Gibbed.MassEffectAndromeda.GameInfo;
-using Gibbed.MassEffectAndromeda.SaveFormats;
-using Gibbed.MassEffectAndromeda.SaveFormats.Agents;
-using Gibbed.MassEffectAndromeda.SaveFormats.Components;
-using Gibbed.MassEffectAndromeda.SaveFormats.ComponentContainerAgents;
-using Gibbed.MassEffectAndromeda.SaveFormats.CustomizedParameters;
-using Gibbed.MassEffectAndromeda.SaveFormats.Data;
-using ItemData = Gibbed.MassEffectAndromeda.SaveFormats.Items.ItemData;
-using GearItemData = Gibbed.MassEffectAndromeda.SaveFormats.Items.GearItemData;
-using RangedWeaponItemData = Gibbed.MassEffectAndromeda.SaveFormats.Items.RangedWeaponItemData;
+using MEA.FileFormats;
+using MEA.GameInfo;
+using MEA.SaveFormats;
+using MEA.SaveFormats.Agents;
+using MEA.SaveFormats.Components;
+using MEA.SaveFormats.ComponentContainerAgents;
+using MEA.SaveFormats.CustomizedParameters;
+using MEA.SaveFormats.Data;
+using ItemData = MEA.SaveFormats.Items.ItemData;
+using GearItemData = MEA.SaveFormats.Items.GearItemData;
+using RangedWeaponItemData = MEA.SaveFormats.Items.RangedWeaponItemData;
 
 namespace MEABasicSaveEditor
 {

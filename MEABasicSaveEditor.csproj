@@ -28,20 +28,20 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Costura.Fody" Version="6.2.0" PrivateAssets="All" />
-    <Reference Include="Gibbed.IO">
-      <HintPath>libs\Gibbed.IO.dll</HintPath>
+    <Reference Include="MEA.IO">
+      <HintPath>libs\MEA.IO.dll</HintPath>
     </Reference>
-    <Reference Include="Gibbed.Frostbite3.Common">
-      <HintPath>libs\Gibbed.Frostbite3.Common.dll</HintPath>
+    <Reference Include="MEA.Frostbite.Common">
+      <HintPath>libs\MEA.Frostbite.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Gibbed.MassEffectAndromeda.FileFormats">
-      <HintPath>libs\Gibbed.MassEffectAndromeda.FileFormats.dll</HintPath>
+    <Reference Include="MEA.FileFormats">
+      <HintPath>libs\MEA.FileFormats.dll</HintPath>
     </Reference>
-    <Reference Include="Gibbed.MassEffectAndromeda.GameInfo">
-      <HintPath>libs\Gibbed.MassEffectAndromeda.GameInfo.dll</HintPath>
+    <Reference Include="MEA.GameInfo">
+      <HintPath>libs\MEA.GameInfo.dll</HintPath>
     </Reference>
-    <Reference Include="Gibbed.MassEffectAndromeda.SaveFormats">
-      <HintPath>libs\Gibbed.MassEffectAndromeda.SaveFormats.dll</HintPath>
+    <Reference Include="MEA.SaveFormats">
+      <HintPath>libs\MEA.SaveFormats.dll</HintPath>
     </Reference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
