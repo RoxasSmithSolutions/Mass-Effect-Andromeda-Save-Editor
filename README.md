@@ -1,6 +1,6 @@
 # Mass Effect Andromeda Basic Save Editor
 
-![Banner](Production/NexusMods/nexus_header_banner_1300x372.png)
+![Banner](Resources/nexus_header_banner_1300x372.png)
 
 A modern, standalone, zero-risk save editor for **Mass Effect: Andromeda** single-player campaigns. Developed by **RoxasSmithSolutions (RSS)**.
 
@@ -16,11 +16,11 @@ A modern, standalone, zero-risk save editor for **Mass Effect: Andromeda** singl
 
 | General (Progression & Stats) | Armory (Weapons & Tier X Upgrades) |
 | :---: | :---: |
-| ![General](Production/NexusMods/General.png) | ![Armory](Production/NexusMods/Armory.png) |
+| ![General](Resources/General.png) | ![Armory](Resources/Armory.png) |
 
 | Profiles (Dynamic Archetype Theming) | Resources & Remnant Decryption Keys |
 | :---: | :---: |
-| ![Profiles](Production/NexusMods/Profiles.png) | ![Resources](Production/NexusMods/Resources.png) |
+| ![Profiles](Resources/Profiles.png) | ![Resources](Resources/Resources.png) |
 
 ---
 
