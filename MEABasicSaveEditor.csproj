@@ -1,0 +1,58 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>ME Andromeda Basic Save Editor</AssemblyName>
+    <RootNamespace>MEABasicSaveEditor</RootNamespace>
+    
+    <!-- Version & Metadata -->
+    <AssemblyTitle>Mass Effect Andromeda Basic Save Editor</AssemblyTitle>
+    <Title>Mass Effect Andromeda Basic Save Editor</Title>
+    <Description>Mass Effect Andromeda Basic Save Editor</Description>
+    <Product>Mass Effect Andromeda Basic Save Editor</Product>
+    <Company>RoxasSmithSolutions</Company>
+    <Copyright>RoxasSmithSolutions</Copyright>
+    <Version>2.0.0.0</Version>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
+    <InformationalVersion>2.0.0.0</InformationalVersion>
+    <NeutralLanguage>en-US</NeutralLanguage>
+
+    <!-- Win32 Version Resource (sets Language: English (United States)) -->
+    <Win32Resource>version.res</Win32Resource>
+
+    <DebugType Condition="'$(Configuration)' == 'Release'">none</DebugType>
+    <DebugSymbols Condition="'$(Configuration)' == 'Release'">false</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Costura.Fody" Version="6.2.0" PrivateAssets="All" />
+    <Reference Include="MEA.IO">
+      <HintPath>libs\MEA.IO.dll</HintPath>
+    </Reference>
+    <Reference Include="MEA.Frostbite.Common">
+      <HintPath>libs\MEA.Frostbite.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="MEA.FileFormats">
+      <HintPath>libs\MEA.FileFormats.dll</HintPath>
+    </Reference>
+    <Reference Include="MEA.GameInfo">
+      <HintPath>libs\MEA.GameInfo.dll</HintPath>
+    </Reference>
+    <Reference Include="MEA.SaveFormats">
+      <HintPath>libs\MEA.SaveFormats.dll</HintPath>
+    </Reference>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\logo.png" />
+    <Resource Include="Resources\emblem.png" />
+    <Resource Include="Resources\app.ico" />
+    <Resource Include="Resources\background.jpg" />
+    <Resource Include="Resources\guide_general.png" />
+    <Resource Include="Resources\guide_armory.png" />
+    <Resource Include="Resources\guide_profiles.png" />
+    <Resource Include="Resources\guide_resources.png" />
+  </ItemGroup>
+</Project>
