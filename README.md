@@ -16,11 +16,11 @@ A modern, standalone, zero-risk save editor for **Mass Effect: Andromeda** singl
 
 | General (Progression & Stats) | Armory (Weapons & Tier X Upgrades) |
 | :---: | :---: |
-| ![General](Production/NexusMods/nexus_gallery_01_general.png) | ![Armory](Production/NexusMods/nexus_gallery_02_armory.png) |
+| ![General](Production/NexusMods/General.png) | ![Armory](Production/NexusMods/Armory.png) |
 
 | Profiles (Dynamic Archetype Theming) | Resources & Remnant Decryption Keys |
 | :---: | :---: |
-| ![Profiles](Production/NexusMods/nexus_gallery_03_profiles.png) | ![Resources](Production/NexusMods/nexus_gallery_04_resources.png) |
+| ![Profiles](Production/NexusMods/Profiles.png) | ![Resources](Production/NexusMods/Resources.png) |
 
 ---
 
