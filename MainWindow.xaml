@@ -1,0 +1,1890 @@
+﻿<Window x:Class="MEABasicSaveEditor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ME Andromeda Basic Save Editor"
+        Height="920" Width="1280"
+        MinHeight="920" MinWidth="1280"
+        ResizeMode="CanMinimize"
+        WindowStartupLocation="CenterScreen"
+        Background="#080D14" Foreground="#E2E8F0"
+        FontFamily="Segoe UI" FontSize="12">
+
+    <Window.Resources>
+        <!-- Futuristic Mass Effect Andromeda Theme Brushes -->
+        <SolidColorBrush x:Key="AccentColor" Color="#00D2FF"/>
+        <SolidColorBrush x:Key="AccentHover" Color="#33DDFF"/>
+        <SolidColorBrush x:Key="MenuBarBg" Color="#E60D1622"/>
+        <SolidColorBrush x:Key="TitleBarBg" Color="#D9111B29"/>
+        <SolidColorBrush x:Key="CardBg" Color="#A60A131F"/>
+        <SolidColorBrush x:Key="CardHeaderBg" Color="#E6101E2E"/>
+        <SolidColorBrush x:Key="BorderColor" Color="#253E5C"/>
+        <SolidColorBrush x:Key="BorderFocus" Color="#00D2FF"/>
+        <SolidColorBrush x:Key="InputBg" Color="#CC0D1722"/>
+        <SolidColorBrush x:Key="TextNormal" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="TextMuted" Color="#9AB2D1"/>
+
+        <!-- Custom ToolBar Buttons -->
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#162538"/>
+            <Setter Property="Foreground" Value="#E2E8F0"/>
+            <Setter Property="BorderBrush" Value="#253E5C"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#203650"/>
+                    <Setter Property="BorderBrush" Value="#00D2FF"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.4"/>
+                    <Setter Property="Cursor" Value="Arrow"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="AccentButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="#007799"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#00D2FF"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#0099C2"/>
+                    <Setter Property="BorderBrush" Value="#33DDFF"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="SavePrimaryButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="#0E5A8A"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#00D2FF"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1374B0"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="DangerButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="#4A181E"/>
+            <Setter Property="Foreground" Value="#FFAAA6"/>
+            <Setter Property="BorderBrush" Value="#7E242C"/>
+            <Setter Property="Padding" Value="6,2"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#6E232B"/>
+                    <Setter Property="BorderBrush" Value="#FF5A65"/>
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Mini Action Button Style -->
+        <Style x:Key="MiniBtnStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Height" Value="22"/>
+            <Setter Property="Padding" Value="8,1"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Background" Value="#17273A"/>
+            <Setter Property="BorderBrush" Value="#22405F"/>
+            <Setter Property="Foreground" Value="#00D2FF"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bdr" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="3" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bdr" Property="Background" Value="#1E3652"/>
+                                <Setter TargetName="bdr" Property="BorderBrush" Value="#00E5FF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="bdr" Property="Background" Value="#0A1828"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <BooleanToVisibilityConverter x:Key="BoolToVisConverter"/>
+        <!-- Category Pill Button Style for Armory -->
+        <!-- Category Pill Styles: Unique Distinct Colors for each category -->
+        <!-- Weapons (Amber Orange) -->
+        <Style x:Key="PillWeapons" TargetType="RadioButton">
+            <Setter Property="Background" Value="#18110A"/>
+            <Setter Property="Foreground" Value="#FFA726"/>
+            <Setter Property="BorderBrush" Value="#42260C"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="11,5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#2D1C0A"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#FF9100"/>
+                                <Setter Property="Foreground" Value="#FFB74D"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#381D05"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#FF9100"/>
+                                <Setter TargetName="Bd" Property="BorderThickness" Value="1.5"/>
+                                <Setter Property="Foreground" Value="#FF9100"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Weapon Mods (Emerald Green) -->
+        <Style x:Key="PillWeaponMods" TargetType="RadioButton">
+            <Setter Property="Background" Value="#0A1C14"/>
+            <Setter Property="Foreground" Value="#69F0AE"/>
+            <Setter Property="BorderBrush" Value="#13472C"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="11,5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#113524"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#00E676"/>
+                                <Setter Property="Foreground" Value="#B9F6CA"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#06381C"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#00E676"/>
+                                <Setter TargetName="Bd" Property="BorderThickness" Value="1.5"/>
+                                <Setter Property="Foreground" Value="#00E676"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Armor (Shield Cyan / Blue) -->
+        <Style x:Key="PillArmor" TargetType="RadioButton">
+            <Setter Property="Background" Value="#0B1A2A"/>
+            <Setter Property="Foreground" Value="#38BDF8"/>
+            <Setter Property="BorderBrush" Value="#163854"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="11,5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#122E4A"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#00D2FF"/>
+                                <Setter Property="Foreground" Value="#7DD3FC"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#082A47"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#00D2FF"/>
+                                <Setter TargetName="Bd" Property="BorderThickness" Value="1.5"/>
+                                <Setter Property="Foreground" Value="#00D2FF"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Fusion Mods (Exotic Violet / Purple) -->
+        <Style x:Key="PillFusionMods" TargetType="RadioButton">
+            <Setter Property="Background" Value="#1A0D23"/>
+            <Setter Property="Foreground" Value="#E879F9"/>
+            <Setter Property="BorderBrush" Value="#421A58"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="11,5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#2A1239"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#C084FC"/>
+                                <Setter Property="Foreground" Value="#F0ABFC"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#38104F"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#C084FC"/>
+                                <Setter TargetName="Bd" Property="BorderThickness" Value="1.5"/>
+                                <Setter Property="Foreground" Value="#C084FC"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Consumables (Golden Yellow) -->
+        <Style x:Key="PillConsumables" TargetType="RadioButton">
+            <Setter Property="Background" Value="#1C1808"/>
+            <Setter Property="Foreground" Value="#FBBF24"/>
+            <Setter Property="BorderBrush" Value="#4A3E10"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="11,5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#2E260A"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#FBBF24"/>
+                                <Setter Property="Foreground" Value="#FDE68A"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#382E06"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#FBBF24"/>
+                                <Setter TargetName="Bd" Property="BorderThickness" Value="1.5"/>
+                                <Setter Property="Foreground" Value="#FBBF24"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Form TextBoxes -->
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="{StaticResource InputBg}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextNormal}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="6,3"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="CaretBrush" Value="#00D2FF"/>
+            <Style.Triggers>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="BorderBrush" Value="{StaticResource BorderFocus}"/>
+                </Trigger>
+                <Trigger Property="IsReadOnly" Value="True">
+                    <Setter Property="Foreground" Value="{StaticResource TextMuted}"/>
+                    <Setter Property="Background" Value="#0A121A"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- TabControl and TabItem Styles -->
+        <Style TargetType="TabControl">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabControl">
+                        <Grid KeyboardNavigation.TabNavigation="Local">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <!-- Tab Header Buttons using StackPanel so WPF TabPanel arrange hack does not clip bottom border -->
+                            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12" IsItemsHost="True"/>
+                            <ContentPresenter Grid.Row="1" ContentSource="SelectedContent"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="TabItem">
+            <Setter Property="Foreground" Value="{StaticResource TextMuted}"/>
+            <Setter Property="Background" Value="#0E1724"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="22,8"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border x:Name="TabBorder" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter ContentSource="Header" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="TabBorder" Property="Background" Value="#192A3D"/>
+                                <Setter TargetName="TabBorder" Property="BorderBrush" Value="#2A5C85"/>
+                                <Setter Property="Foreground" Value="{StaticResource AccentColor}"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="TabBorder" Property="Background" Value="#0C2033"/>
+                                <Setter TargetName="TabBorder" Property="BorderBrush" Value="{StaticResource AccentColor}"/>
+                                <Setter TargetName="TabBorder" Property="BorderThickness" Value="1.5"/>
+                                <Setter Property="Foreground" Value="{StaticResource AccentColor}"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ComboBox Toggle Button Template -->
+        <ControlTemplate x:Key="ComboBoxToggleButtonTemplate" TargetType="ToggleButton">
+            <Border x:Name="ButtonBorder"
+                    Background="{TemplateBinding Background}" 
+                    BorderBrush="{TemplateBinding BorderBrush}" 
+                    BorderThickness="{TemplateBinding BorderThickness}" 
+                    CornerRadius="3">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="22" />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="1" Background="#142132" BorderBrush="{StaticResource BorderColor}" BorderThickness="1,0,0,0" CornerRadius="0,2,2,0">
+                        <Path HorizontalAlignment="Center" 
+                              VerticalAlignment="Center" 
+                              Data="M 0 0 L 4 4 L 8 0 Z" 
+                              Fill="{StaticResource AccentColor}" />
+                    </Border>
+                </Grid>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="{StaticResource AccentColor}" />
+                    <Setter TargetName="ButtonBorder" Property="Background" Value="#1C2E42" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <!-- Custom Dark Andromeda ComboBox Style -->
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="#0D1826" />
+            <Setter Property="BorderBrush" Value="{StaticResource BorderColor}" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="8,4" />
+            <Setter Property="MinHeight" Value="26" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton x:Name="ToggleButton" 
+                                          Background="{TemplateBinding Background}"
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          BorderThickness="{TemplateBinding BorderThickness}"
+                                          Template="{StaticResource ComboBoxToggleButtonTemplate}" 
+                                          Focusable="False" 
+                                          IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" 
+                                          ClickMode="Press" />
+                            <ContentPresenter x:Name="ContentSite" 
+                                              IsHitTestVisible="False" 
+                                              Content="{TemplateBinding SelectionBoxItem}" 
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" 
+                                              ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" 
+                                              TextElement.Foreground="#FFFFFF"
+                                              Margin="10,4,28,4" 
+                                              VerticalAlignment="Center" 
+                                              HorizontalAlignment="Left" />
+                            <Popup x:Name="Popup" 
+                                   Placement="Bottom" 
+                                   IsOpen="{TemplateBinding IsDropDownOpen}" 
+                                   AllowsTransparency="True" 
+                                   Focusable="False" 
+                                   PopupAnimation="Slide">
+                                <Grid x:Name="DropDown" 
+                                      SnapsToDevicePixels="True" 
+                                      MinWidth="{TemplateBinding ActualWidth}" 
+                                      MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border x:Name="DropDownBorder" 
+                                            Background="#0E1928" 
+                                            BorderThickness="1" 
+                                            BorderBrush="{StaticResource AccentColor}" 
+                                            CornerRadius="3" />
+                                    <ScrollViewer Margin="2,4" SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                    </ScrollViewer>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasItems" Value="False">
+                                <Setter TargetName="DropDownBorder" Property="MinHeight" Value="95" />
+                            </Trigger>
+                            <Trigger Property="IsGrouping" Value="True">
+                                <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="{StaticResource TextMuted}" />
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Background" Value="#0E1928" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="Padding" Value="10,6" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBoxItem">
+                        <Border x:Name="ItemBorder" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter VerticalAlignment="Center" TextElement.Foreground="{TemplateBinding Foreground}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter TargetName="ItemBorder" Property="Background" Value="#1A3450" />
+                                <Setter Property="Foreground" Value="#00D2FF" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="ItemBorder" Property="Background" Value="#0F4777" />
+                                <Setter Property="Foreground" Value="#00D2FF" />
+                                <Setter Property="FontWeight" Value="Bold" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- DataGrid Andromeda Style -->
+        <Style TargetType="DataGrid">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="Transparent"/>
+            <Setter Property="RowBackground" Value="#9909131F"/>
+            <Setter Property="AlternatingRowBackground" Value="#BF0D1826"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="CanUserDeleteRows" Value="False"/>
+            <Setter Property="SelectionMode" Value="Single"/>
+            <Setter Property="RowHeight" Value="34"/>
+        </Style>
+
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="{StaticResource CardHeaderBg}"/>
+            <Setter Property="Foreground" Value="{StaticResource AccentColor}"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="0,0,1,1"/>
+            <Setter Property="Padding" Value="12,7"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="DataGridRow">
+            <Setter Property="Foreground" Value="{StaticResource TextNormal}"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="BorderBrush" Value="#172A3D"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1F364E"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#14324F"/>
+                    <Setter Property="BorderBrush" Value="{StaticResource AccentColor}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="DataGridCell">
+            <Setter Property="Padding" Value="10,4"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridCell">
+                        <Border Padding="{TemplateBinding Padding}" Background="Transparent">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <!-- Main Container with Background Image Overlay -->
+    <Grid>
+        <!-- Background sci-fi nebula overlay -->
+        <Image Source="Resources/background.jpg" Stretch="UniformToFill" Opacity="0.40" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/> <!-- 0. Top Menu Bar -->
+                <RowDefinition Height="Auto"/> <!-- 1. Active File Header Strip -->
+                <RowDefinition Height="Auto"/> <!-- 2. Notification Banner -->
+                <RowDefinition Height="*"/>    <!-- 3. Tabbed Content -->
+                <RowDefinition Height="Auto"/> <!-- 4. Status Footer -->
+            </Grid.RowDefinitions>
+
+            <!-- 1. TOP MENU BAR -->
+            <Border Grid.Row="0" Background="{StaticResource MenuBarBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="0,0,0,1" Padding="12,6">
+                <DockPanel LastChildFill="True">
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" VerticalAlignment="Center">
+                        <Image Source="Resources/emblem.png" Height="26" Width="40" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="ME Andromeda Basic Save Editor" FontWeight="Bold" Foreground="{StaticResource AccentColor}" FontSize="14" VerticalAlignment="Center" Margin="0,0,20,0"/>
+
+                        <!-- Action Buttons -->
+                        <Button Content="📂 Open Save..." Click="BtnOpenFile_Click" Style="{StaticResource AccentButton}" Margin="0,0,6,0" ToolTip="Open a save file to edit."/>
+                        <Button x:Name="BtnSave" Content="💾 Save" Click="BtnSave_Click" Style="{StaticResource SavePrimaryButton}" IsEnabled="False" Margin="0,0,6,0" ToolTip="Creates a timestamped backup in 'ME Andromeda Save Editor Backup' and saves all edits directly to your game save."/>
+                        <Button x:Name="BtnReload" Content="↻ Reload" Click="BtnReload_Click" IsEnabled="False" Margin="0,0,14,0" ToolTip="Reload the active save from disk"/>
+
+                        <Button Content="↺ Restore from Backup..." Click="BtnRestoreBackup_Click" Margin="0,0,6,0" ToolTip="View and restore timestamped backups"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <Button x:Name="BtnAbout" Click="BtnAbout_Click" Margin="0,0,4,0" Height="28" Cursor="Hand" ToolTip="About ME Andromeda Save Editor, How-To Guides &amp; License">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background" Value="#091624"/>
+                                    <Setter Property="Foreground" Value="#00D2FF"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="FontSize" Value="11"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="#1C3852" BorderThickness="1" CornerRadius="3">
+                                                    <Grid>
+                                                        <Border Width="3" HorizontalAlignment="Left" Background="#00D2FF" CornerRadius="3,0,0,3"/>
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12,4,10,4"/>
+                                                    </Grid>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="Bd" Property="Background" Value="#143450"/>
+                                                        <Setter TargetName="Bd" Property="BorderBrush" Value="#00D2FF"/>
+                                                        <Setter Property="Foreground" Value="#FFFFFF"/>
+                                                        <Setter TargetName="Bd" Property="Effect">
+                                                            <Setter.Value>
+                                                                <DropShadowEffect BlurRadius="12" Color="#00D2FF" Opacity="0.7" ShadowDepth="0"/>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Trigger>
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter TargetName="Bd" Property="Background" Value="#005B7F"/>
+                                                        <Setter TargetName="Bd" Property="BorderBrush" Value="#55E6FF"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Button.Style>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="◈" FontWeight="Bold" FontSize="11" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="ABOUT" FontWeight="Bold" FontSize="11" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <!-- 2. ACTIVE FILE HEADER STRIP -->
+            <Border Grid.Row="1" Background="{StaticResource TitleBarBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="0,0,0,1" Padding="14,6">
+                <DockPanel LastChildFill="True">
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                        <TextBlock Text="FILE:" Foreground="{StaticResource TextMuted}" FontWeight="Bold" FontSize="11" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="TxtHeaderFileName" Text="None (Editor is blank)" Foreground="{StaticResource AccentColor}" FontWeight="Bold" FontSize="11" Margin="0,0,18,0" VerticalAlignment="Center"/>
+
+                        <TextBlock Text="PATHFINDER:" Foreground="{StaticResource TextMuted}" FontWeight="Bold" FontSize="11" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="TxtHeaderPathfinder" Text="--" Foreground="{StaticResource TextNormal}" FontSize="11" Margin="0,0,18,0" VerticalAlignment="Center"/>
+
+                        <TextBlock Text="LEVEL:" Foreground="{StaticResource TextMuted}" FontWeight="Bold" FontSize="11" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="TxtHeaderLevel" Text="--" Foreground="{StaticResource TextNormal}" FontSize="11" Margin="0,0,18,0" VerticalAlignment="Center"/>
+
+                        <TextBlock Text="PLAYTIME:" Foreground="{StaticResource TextMuted}" FontWeight="Bold" FontSize="11" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="TxtHeaderPlaytime" Text="--" Foreground="{StaticResource TextNormal}" FontSize="11" Margin="0,0,18,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <!-- 3. NOTIFICATION BANNER -->
+            <Border Grid.Row="2" x:Name="BannerAlert" Visibility="Collapsed" Background="#0C3B24" BorderBrush="#2ECC71" BorderThickness="0,0,0,1" Padding="12,5">
+                <DockPanel LastChildFill="True">
+                    <TextBlock x:Name="TxtAlertMessage" Text="✓ Action completed successfully." FontWeight="SemiBold" Foreground="#2ECC71" FontSize="11" VerticalAlignment="Center"/>
+                    <Button Content="✕" Click="BtnDismissAlert_Click" DockPanel.Dock="Right" HorizontalAlignment="Right" Background="Transparent" Foreground="#A0D0B0" BorderThickness="0" Cursor="Hand" Padding="6,0"/>
+                </DockPanel>
+            </Border>
+
+            <!-- 4. MAIN CONTENT AREA (TABBED) -->
+            <Grid Grid.Row="3">
+                <!-- Initial Welcome Prompt (Visible when no save is loaded) -->
+                <Border x:Name="PanelWelcomePrompt" Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Padding="30" Margin="24" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Image Source="Resources/emblem.png" Height="48" Width="70" Margin="0,0,0,16" HorizontalAlignment="Center"/>
+                        <TextBlock Text="No save file is currently open." FontSize="15" FontWeight="SemiBold" Foreground="{StaticResource TextNormal}" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Click '📂 Open Save...' above to select an Andromeda save file from your BioWare Save folder." FontSize="12" Foreground="{StaticResource TextMuted}" HorizontalAlignment="Center" Margin="0,6,0,16"/>
+                        <Button Content="📂 Open Save File" Click="BtnOpenFile_Click" Style="{StaticResource AccentButton}" Padding="18,7" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- TAB CONTROL -->
+                <TabControl x:Name="MainTabs" Visibility="Collapsed" Margin="14,10,14,10">
+                    
+                    <!-- ============================================================== -->
+                    <!-- TAB 1: GENERAL                                                 -->
+                    <!-- ============================================================== -->
+                    <TabItem Header="⚙ General">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                            <StackPanel Margin="4,10,4,16">
+
+                                <!-- Row 1: Role-Play & Campaign -->
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- ROLE-PLAY CARD -->
+                                    <Border Grid.Column="0" Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Margin="0,0,6,0">
+                                        <StackPanel>
+                                            <Border Background="{StaticResource CardHeaderBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="0,0,0,1" Padding="10,6" CornerRadius="3,3,0,0">
+                                                <TextBlock Text="Role-Play" FontWeight="Bold" Foreground="{StaticResource AccentColor}" FontSize="13"/>
+                                            </Border>
+                                            <Grid Margin="12,8,12,12">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="150"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+
+                                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Pathfinder Name:" VerticalAlignment="Center" Margin="0,3"/>
+                                                <TextBox Grid.Row="0" Grid.Column="1" x:Name="TxtPathfinderName" Margin="0,2"/>
+
+                                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Gender:" VerticalAlignment="Center" Margin="0,3"/>
+                                                <ComboBox Grid.Row="1" Grid.Column="1" x:Name="CmbGender" Margin="0,2">
+                                                    <ComboBoxItem Content="Male (Scott Ryder)"/>
+                                                    <ComboBoxItem Content="Female (Sara Ryder)"/>
+                                                </ComboBox>
+
+                                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Active Profile / Training:" VerticalAlignment="Center" Margin="0,3"/>
+                                                <Grid Grid.Row="2" Grid.Column="1" Margin="0,2">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBox Grid.Column="0" x:Name="TxtActiveProfileDisplay" IsReadOnly="True" 
+                                                             Background="#0B1522" Foreground="#00D2FF" FontWeight="SemiBold" 
+                                                             BorderBrush="{StaticResource BorderColor}" 
+                                                             ToolTip="Ryder's active combat profile. Change this by clicking 'Set Active' on the Profiles tab."/>
+                                                    <Button Grid.Column="1" Content="Switch Profile &#x279C;" Click="BtnGoToProfiles_Click" 
+                                                            Style="{StaticResource MiniBtnStyle}" Margin="6,0,0,0" Padding="8,2" Height="24"
+                                                            ToolTip="Open the Profiles tab to choose Ryder's active combat profile"/>
+                                                </Grid>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- CAMPAIGN CARD -->
+                                    <Border Grid.Column="1" Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Margin="6,0,0,0">
+                                        <StackPanel>
+                                            <Border Background="{StaticResource CardHeaderBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="0,0,0,1" Padding="10,6" CornerRadius="3,3,0,0">
+                                                <TextBlock Text="Campaign" FontWeight="Bold" Foreground="{StaticResource AccentColor}" FontSize="13"/>
+                                            </Border>
+                                            <Grid Margin="12,8,12,12">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="130"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+
+                                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Play Time:" VerticalAlignment="Center" Margin="0,3"/>
+                                                <TextBox Grid.Row="0" Grid.Column="1" x:Name="TxtPlayTime" Margin="0,2" IsReadOnly="True"/>
+
+                                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Current Location:" VerticalAlignment="Center" Margin="0,3"/>
+                                                <TextBox Grid.Row="1" Grid.Column="1" x:Name="TxtLocation" Margin="0,2" IsReadOnly="True"/>
+
+                                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Difficulty:" VerticalAlignment="Center" Margin="0,3"/>
+                                                <ComboBox Grid.Row="2" Grid.Column="1" x:Name="CmbDifficulty" Margin="0,2">
+                                                    <ComboBoxItem Content="Narrative"/>
+                                                    <ComboBoxItem Content="Casual"/>
+                                                    <ComboBoxItem Content="Normal"/>
+                                                    <ComboBoxItem Content="Hardcore"/>
+                                                    <ComboBoxItem Content="Insanity"/>
+                                                </ComboBox>
+
+                                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Career ID:" VerticalAlignment="Center" Margin="0,3"/>
+                                                <TextBox Grid.Row="3" Grid.Column="1" x:Name="TxtCareerId" Margin="0,2" IsReadOnly="True"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
+                                <!-- Row 2: Split Gameplay (Left) & Progression (Right) -->
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- GAMEPLAY CARD -->
+                                    <Border Grid.Column="0" Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Margin="0,0,6,0">
+                                        <StackPanel>
+                                            <Border Background="{StaticResource CardHeaderBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="0,0,0,1" Padding="10,6" CornerRadius="3,3,0,0">
+                                                <TextBlock Text="Gameplay" FontWeight="Bold" Foreground="{StaticResource AccentColor}" FontSize="13"/>
+                                            </Border>
+                                            <Grid Margin="12,8,12,12">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="150"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+
+                                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Ryder Level:" VerticalAlignment="Center" Margin="0,3"/>
+                                                <TextBox Grid.Row="0" Grid.Column="1" x:Name="TxtRyderLevel" Margin="0,2"/>
+
+                                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Current XP:" VerticalAlignment="Center" Margin="0,3"/>
+                                                <TextBox Grid.Row="1" Grid.Column="1" x:Name="TxtCurrentXp" Margin="0,2"/>
+
+                                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Skill Points:" VerticalAlignment="Center" Margin="0,3"/>
+                                                <TextBox Grid.Row="2" Grid.Column="1" x:Name="TxtSkillPoints" Margin="0,2"/>
+
+                                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Item Limit:" VerticalAlignment="Center" Margin="0,3"/>
+                                                <TextBox Grid.Row="3" Grid.Column="1" x:Name="TxtItemLimit" TextChanged="TxtItemLimit_TextChanged" Margin="0,2" ToolTip="Inventory item capacity (Default 100, Trade Capacity I: 150, Trade Capacity II: 200)"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- PROGRESSION CARD -->
+                                    <Border Grid.Column="1" Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Margin="6,0,0,0">
+                                        <StackPanel>
+                                            <Border Background="{StaticResource CardHeaderBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="0,0,0,1" Padding="10,6" CornerRadius="3,3,0,0">
+                                                <TextBlock Text="Progression" FontWeight="Bold" Foreground="{StaticResource AccentColor}" FontSize="13"/>
+                                            </Border>
+                                            <Grid Margin="12,8,12,12">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="150"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+
+                                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Nexus Level:" VerticalAlignment="Center" Margin="0,3"/>
+                                                <TextBox Grid.Row="0" Grid.Column="1" x:Name="TxtNexusLevel" Margin="0,2" ToolTip="Current Nexus Station Level (1-30)"/>
+
+                                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Current A.V.P.:" VerticalAlignment="Center" Margin="0,3"/>
+                                                <TextBox Grid.Row="1" Grid.Column="1" x:Name="TxtAvpPoints" Margin="0,2" ToolTip="Andromeda Viability Points"/>
+
+                                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Credits:" VerticalAlignment="Center" Margin="0,3"/>
+                                                <TextBox Grid.Row="2" Grid.Column="1" x:Name="TxtCredits" Margin="0,2"/>
+
+                                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Milky Way Research:" VerticalAlignment="Center" Margin="0,3"/>
+                                                <TextBox Grid.Row="3" Grid.Column="1" x:Name="TxtMilkyWayRD" Margin="0,2"/>
+
+                                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Heleus Research:" VerticalAlignment="Center" Margin="0,3"/>
+                                                <TextBox Grid.Row="4" Grid.Column="1" x:Name="TxtHeleusRD" Margin="0,2"/>
+
+                                                <TextBlock Grid.Row="5" Grid.Column="0" Text="Remnant Research:" VerticalAlignment="Center" Margin="0,3"/>
+                                                <TextBox Grid.Row="5" Grid.Column="1" x:Name="TxtRemnantRD" Margin="0,2"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </TabItem>
+
+                    <!-- ============================================================== -->
+                    <!-- TAB 2: ARMORY                                                  -->
+                    <!-- ============================================================== -->
+                    <TabItem Header="⚔ Armory">
+                        <Grid Margin="4,10,4,4">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/> <!-- Category Tabs & Search Bar -->
+                                <RowDefinition Height="*"/>    <!-- DataGrid of Inventory Items -->
+                                <RowDefinition Height="Auto"/> <!-- Add Item Panel -->
+                            </Grid.RowDefinitions>
+
+                            <!-- Top Controls: Category Pill Navigation, Sub-category Filter & Search -->
+                            <Border Grid.Row="0" Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Padding="12,8" Margin="0,0,0,10">
+                                <DockPanel LastChildFill="True">
+                                    <!-- Right: SubCategory, Search Box, Clear & Count in View -->
+                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="14,0,0,0">
+                                        <TextBlock Text="Sub-Type:" Foreground="{StaticResource TextMuted}" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <ComboBox x:Name="CmbArmorySubCategory" Width="125" SelectionChanged="CmbArmorySubCategory_SelectionChanged" VerticalAlignment="Center" Margin="0,0,10,0"/>
+
+                                        <TextBlock Text="&#x1F50D; Search:" Foreground="{StaticResource TextMuted}" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <TextBox x:Name="TxtArmorySearch" Width="125" TextChanged="TxtArmorySearch_TextChanged" VerticalAlignment="Center" Margin="0,0,4,0" ToolTip="Type to search items in current category"/>
+                                        <Button Content="&#x2715;" Click="BtnClearArmorySearch_Click" Style="{StaticResource MiniBtnStyle}" Width="22" Height="22" Padding="0" Margin="0,0,10,0" ToolTip="Clear search"/>
+
+                                        <Border Background="#0C1B2B" BorderBrush="#1C3854" BorderThickness="1" CornerRadius="3" Padding="8,3" VerticalAlignment="Center">
+                                            <TextBlock x:Name="TxtArmoryCount" Text="0 in View" Foreground="#00D2FF" FontWeight="Bold" FontSize="11"/>
+                                        </Border>
+                                    </StackPanel>
+
+                                    <!-- Left: Category Navigation Pill Buttons with individual color identities -->
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <RadioButton x:Name="RbFilterWeapons" Content="&#x1F52B; Weapons" IsChecked="True" Checked="FilterArmoryCategory_Changed" GroupName="ArmoryCat" Style="{StaticResource PillWeapons}" Margin="0,0,5,0"/>
+                                        <RadioButton x:Name="RbFilterWeaponMods" Content="&#x2699; Weapon Mods" Checked="FilterArmoryCategory_Changed" GroupName="ArmoryCat" Style="{StaticResource PillWeaponMods}" Margin="0,0,5,0"/>
+                                        <RadioButton x:Name="RbFilterArmor" Content="&#x1F6E1; Armor" Checked="FilterArmoryCategory_Changed" GroupName="ArmoryCat" Style="{StaticResource PillArmor}" Margin="0,0,5,0"/>
+                                        <RadioButton x:Name="RbFilterFusionMods" Content="&#x1F52E; Fusion Mods" Checked="FilterArmoryCategory_Changed" GroupName="ArmoryCat" Style="{StaticResource PillFusionMods}" Margin="0,0,5,0"/>
+                                        <RadioButton x:Name="RbFilterConsumables" Content="&#x26A1; Consumables" Checked="FilterArmoryCategory_Changed" GroupName="ArmoryCat" Style="{StaticResource PillConsumables}"/>
+                                    </StackPanel>
+                                </DockPanel>
+                            </Border>
+                            <!-- DataGrid of Inventory Items with futuristic loadout styling -->
+                            <Grid Grid.Row="1" Margin="0,0,0,10">
+                                <DataGrid x:Name="DgArmoryItems" RowHeight="46">
+                                    <DataGrid.Columns>
+                                        <!-- Category Badge -->
+                                        <DataGridTemplateColumn Header="Type" Width="95">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="#142233" BorderBrush="{Binding CategoryColor}" BorderThickness="1" CornerRadius="3" Padding="6,2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4,0">
+                                                        <TextBlock Text="{Binding CategoryTag}" Foreground="{Binding CategoryColor}" FontWeight="Bold" FontSize="10"/>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <!-- Item Name & Partition Resource -->
+                                        <DataGridTemplateColumn Header="Item Name" Width="*" MinWidth="320" SortMemberPath="DisplayName">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel VerticalAlignment="Center" Margin="4,2">
+                                                        <TextBlock Text="{Binding DisplayName}" FontWeight="Bold" Foreground="{StaticResource TextNormal}" FontSize="12"/>
+                                                        <TextBlock Text="{Binding FriendlySubtitle}" Foreground="{StaticResource TextMuted}" FontSize="10" TextTrimming="CharacterEllipsis"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <!-- Editable Rarity Dropdown -->
+                                        <DataGridTemplateColumn Header="Rarity" Width="120" SortMemberPath="Rarity">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <ComboBox SelectedIndex="{Binding RarityIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                              Width="105" Height="25" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                        <ComboBoxItem Content="Common" Foreground="#94A3B8"/>
+                                                        <ComboBoxItem Content="Uncommon" Foreground="#93C5FD"/>
+                                                        <ComboBoxItem Content="Rare" Foreground="#FCD34D"/>
+                                                        <ComboBoxItem Content="Ultra Rare" Foreground="#D8B4FE"/>
+                                                    </ComboBox>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <!-- Editable Tier Dropdown -->
+                                        <DataGridTemplateColumn Header="Tier" Width="110" SortMemberPath="Tier">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                        <ComboBox Visibility="{Binding HasTier, Converter={StaticResource BoolToVisConverter}}"
+                                                                  SelectedIndex="{Binding TierIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                  Width="90" Height="25" VerticalAlignment="Center">
+                                                            <ComboBoxItem Content="Tier I"/>
+                                                            <ComboBoxItem Content="Tier II"/>
+                                                            <ComboBoxItem Content="Tier III"/>
+                                                            <ComboBoxItem Content="Tier IV"/>
+                                                            <ComboBoxItem Content="Tier V"/>
+                                                            <ComboBoxItem Content="Tier VI"/>
+                                                            <ComboBoxItem Content="Tier VII"/>
+                                                            <ComboBoxItem Content="Tier VIII"/>
+                                                            <ComboBoxItem Content="Tier IX"/>
+                                                            <ComboBoxItem Content="Tier X"/>
+                                                        </ComboBox>
+                                                        <TextBlock Visibility="{Binding NoTier, Converter={StaticResource BoolToVisConverter}}"
+                                                                   Text="--" Foreground="{StaticResource TextMuted}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <!-- Quantity Stepper -->
+                                        <DataGridTemplateColumn Header="Quantity" Width="140" SortMemberPath="Quantity">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                        <Button Content="-" Click="BtnArmoryQtyDown_Click" Style="{StaticResource MiniBtnStyle}" Width="22" Height="22" Padding="0" Margin="0,0,4,0" ToolTip="Decrease quantity"/>
+                                                        <TextBox Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" Width="55" HorizontalContentAlignment="Center" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                                        <Button Content="+" Click="BtnArmoryQtyUp_Click" Style="{StaticResource MiniBtnStyle}" Width="22" Height="22" Padding="0" ToolTip="Increase quantity"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <!-- Actions (Delete) -->
+                                        <DataGridTemplateColumn Header="Actions" Width="110">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button Content="🗑 Remove" Click="BtnDeleteArmoryItem_Click" Style="{StaticResource DangerButton}" ToolTip="Remove this item from your save game"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+
+                                <!-- Empty State Indicator -->
+                                <Border x:Name="PanelArmoryEmpty" Background="#B3080D14" CornerRadius="4" Visibility="Collapsed">
+                                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <TextBlock Text="📦 No Items in this Category" Foreground="{StaticResource AccentColor}" FontSize="15" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,6"/>
+                                        <TextBlock Text="Use the 'Add Item to Inventory' panel below to add items to your save." Foreground="{StaticResource TextMuted}" FontSize="12" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+
+                            <!-- Add Item Panel at Bottom (Single-Line Compact Bar) -->
+                            <Border Grid.Row="2" Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Padding="12,8">
+                                <DockPanel LastChildFill="True">
+                                    <!-- Right: Add to Inventory Button -->
+                                    <Button DockPanel.Dock="Right" Content="➕ Add to Inventory" Click="BtnAddItemToInventory_Click" Style="{StaticResource AccentButton}" Padding="16,5" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="10,0,0,0"/>
+
+                                    <!-- Left / Center Controls on One Continuous Line -->
+                                    <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="➕ Add Item:" FontWeight="Bold" Foreground="{StaticResource AccentColor}" FontSize="12" VerticalAlignment="Center" Margin="0,0,10,0"/>
+
+                                        <TextBlock Text="Category:" Foreground="{StaticResource TextMuted}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <ComboBox x:Name="CmbAddCategory" Width="120" SelectionChanged="CmbAddCategory_SelectionChanged" Margin="0,0,12,0" VerticalAlignment="Center">
+                                            <ComboBoxItem Content="Weapons" IsSelected="True"/>
+                                            <ComboBoxItem Content="Weapon Mods"/>
+                                            <ComboBoxItem Content="Armor"/>
+                                            <ComboBoxItem Content="Fusion Mods"/>
+                                            <ComboBoxItem Content="Consumables"/>
+                                        </ComboBox>
+
+                                        <TextBlock Text="Filter:" Foreground="{StaticResource TextMuted}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <TextBox x:Name="TxtCatalogSearch" Width="130" TextChanged="TxtCatalogSearch_TextChanged" VerticalAlignment="Center" Margin="0,0,12,0" ToolTip="Type to filter catalog"/>
+
+                                        <TextBlock Text="Item:" Foreground="{StaticResource TextMuted}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <ComboBox x:Name="CmbAddCatalogItem" Width="220" SelectionChanged="CmbAddCatalogItem_SelectionChanged" Margin="0,0,12,0" VerticalAlignment="Center"/>
+
+                                        <TextBlock x:Name="LblAddTier" Text="Tier:" Foreground="{StaticResource TextMuted}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <ComboBox x:Name="CmbAddTier" Width="85" Margin="0,0,12,0" VerticalAlignment="Center"/>
+
+                                        <TextBlock Text="Qty:" Foreground="{StaticResource TextMuted}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <Button Content="-" Click="BtnAddQtyDown_Click" Style="{StaticResource MiniBtnStyle}" Width="20" Height="24" Padding="0" Margin="0,0,2,0" VerticalAlignment="Center"/>
+                                        <TextBox x:Name="TxtAddQuantity" Text="1" Width="45" HorizontalContentAlignment="Center" VerticalAlignment="Center" Margin="0,0,2,0"/>
+                                        <Button Content="+" Click="BtnAddQtyUp_Click" Style="{StaticResource MiniBtnStyle}" Width="20" Height="24" Padding="0" VerticalAlignment="Center"/>
+                                    </WrapPanel>
+                                </DockPanel>
+                            </Border>
+                        </Grid>
+                    </TabItem>
+
+                    <!-- ============================================================== -->
+                    <!-- TAB 3: PROFILES                                                -->
+                    <!-- ============================================================== -->
+                    <TabItem Header="💠 Profiles">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                            <StackPanel Margin="6,10,6,16">
+
+                                <!-- TOP HERO CARD: ACTIVE COMBAT LOADOUT -->
+                                <Border x:Name="HeroCardActiveBorder" Background="{StaticResource CardBg}" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="4" Padding="16,12" Margin="0,0,0,12">
+                                    <Grid>
+                                        <Border x:Name="BarHeroActiveProfile" Width="4" HorizontalAlignment="Left" Background="#00D2FF" CornerRadius="4,0,0,4"/>
+                                        <StackPanel Margin="12,0,0,0">
+                                            <DockPanel LastChildFill="True" Margin="0,0,0,8">
+                                                <Border x:Name="BadgeHeroActiveCombat" Background="#2600D2FF" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="3" Padding="8,2" DockPanel.Dock="Right" VerticalAlignment="Center">
+                                                    <TextBlock x:Name="TxtBadgeHeroActiveCombat" Text="&#x2605; ACTIVE COMBAT LOADOUT" Foreground="#00D2FF" FontWeight="Bold" FontSize="10"/>
+                                                </Border>
+                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <TextBlock Text="Current Active Profile:" Foreground="{StaticResource TextMuted}" FontWeight="Bold" FontSize="13" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                    <Border x:Name="BorderHeroProfilePill" Background="#0C253D" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="3" Padding="10,4">
+                                                        <TextBlock x:Name="TxtActiveProfileOverviewTitle" Text="Explorer (All-Rounder) • Rank 2" Foreground="#00D2FF" FontWeight="Bold" FontSize="13"/>
+                                                    </Border>
+                                                </StackPanel>
+                                            </DockPanel>
+
+                                            <!-- Description of Active Passives -->
+                                            <Border Background="#101C2B" BorderBrush="#1C2E42" BorderThickness="1" CornerRadius="3" Padding="12,8">
+                                                <TextBlock x:Name="TxtActiveProfileOverviewDesc" Text="Grants Biotic Blink Evade (teleport phase through solid barriers), +12% universal power recharge, and balanced combat stats." Foreground="{StaticResource TextNormal}" FontSize="12" TextWrapping="Wrap" LineHeight="18"/>
+                                            </Border>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+
+                                <!-- SINGLE-COLUMN FULL-WIDTH PROFILES LIST -->
+                                <StackPanel>
+
+                                    <!-- CARD 0: SOLDIER (Combat Specialist) -->
+                                    <Border x:Name="CardSoldier" Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Margin="0,0,0,10">
+                                        <Grid>
+                                            <Border Width="4" HorizontalAlignment="Left" Background="#EF4444" CornerRadius="4,0,0,4"/>
+                                            <StackPanel Margin="14,10,14,12">
+                                                <DockPanel LastChildFill="True" Margin="0,0,0,8">
+                                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="12,0,0,0">
+                                                        <Border x:Name="BadgeActiveSoldier" Background="#1A3450" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="3" Padding="8,2" Visibility="Collapsed">
+                                                            <TextBlock x:Name="TxtBadgeActiveSoldier" Text="&#x2605; ACTIVE" Foreground="#00D2FF" FontWeight="Bold" FontSize="10"/>
+                                                        </Border>
+                                                        <Button x:Name="BtnSetActiveSoldier" Content="Set Active" Click="BtnSetActiveProfile_Click" Tag="0" Style="{StaticResource MiniBtnStyle}"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="12,0,0,0">
+                                                        <TextBlock Text="Rank:" Foreground="{StaticResource TextMuted}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                                        <Button Content="&#x25C0;" Click="BtnRankDown_Click" Tag="0" Style="{StaticResource MiniBtnStyle}" Width="26" Height="24" Padding="0" Margin="0,0,6,0" ToolTip="Decrease Rank"/>
+                                                        <Border Background="#0C253D" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="3" Padding="12,2" Margin="0,0,6,0">
+                                                            <TextBlock x:Name="TxtRankSoldier" Text="Rank 1" Foreground="#00D2FF" FontWeight="Bold" FontSize="12" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <Button Content="&#x25B6;" Click="BtnRankUp_Click" Tag="0" Style="{StaticResource MiniBtnStyle}" Width="26" Height="24" Padding="0" ToolTip="Increase Rank"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                        <TextBlock Text="Soldier" FontWeight="Bold" Foreground="#FFFFFF" FontSize="14" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                        <Border Background="#26EF4444" BorderBrush="#EF4444" BorderThickness="1" CornerRadius="3" Padding="6,1" VerticalAlignment="Center">
+                                                            <TextBlock Text="COMBAT" Foreground="#EF4444" FontWeight="Bold" FontSize="9"/>
+                                                        </Border>
+                                                    </StackPanel>
+                                                </DockPanel>
+                                                <Border Background="#09131F" BorderBrush="#162638" BorderThickness="1" CornerRadius="3" Padding="12,8">
+                                                    <TextBlock x:Name="TxtDescSoldier" Text="Loading Soldier perks..." Foreground="{StaticResource TextNormal}" FontSize="11.5" TextWrapping="Wrap" LineHeight="17"/>
+                                                </Border>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- CARD 3: SENTINEL (Tech + Biotic) -->
+                                    <Border x:Name="CardSentinel" Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Margin="0,0,0,10">
+                                        <Grid>
+                                            <Border Width="4" HorizontalAlignment="Left" Background="#06B6D4" CornerRadius="4,0,0,4"/>
+                                            <StackPanel Margin="14,10,14,12">
+                                                <DockPanel LastChildFill="True" Margin="0,0,0,8">
+                                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="12,0,0,0">
+                                                        <Border x:Name="BadgeActiveSentinel" Background="#1A3450" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="3" Padding="8,2" Visibility="Collapsed">
+                                                            <TextBlock x:Name="TxtBadgeActiveSentinel" Text="&#x2605; ACTIVE" Foreground="#00D2FF" FontWeight="Bold" FontSize="10"/>
+                                                        </Border>
+                                                        <Button x:Name="BtnSetActiveSentinel" Content="Set Active" Click="BtnSetActiveProfile_Click" Tag="3" Style="{StaticResource MiniBtnStyle}"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="12,0,0,0">
+                                                        <TextBlock Text="Rank:" Foreground="{StaticResource TextMuted}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                                        <Button Content="&#x25C0;" Click="BtnRankDown_Click" Tag="3" Style="{StaticResource MiniBtnStyle}" Width="26" Height="24" Padding="0" Margin="0,0,6,0" ToolTip="Decrease Rank"/>
+                                                        <Border Background="#0C253D" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="3" Padding="12,2" Margin="0,0,6,0">
+                                                            <TextBlock x:Name="TxtRankSentinel" Text="Rank 1" Foreground="#00D2FF" FontWeight="Bold" FontSize="12" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <Button Content="&#x25B6;" Click="BtnRankUp_Click" Tag="3" Style="{StaticResource MiniBtnStyle}" Width="26" Height="24" Padding="0" ToolTip="Increase Rank"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                        <TextBlock Text="Sentinel" FontWeight="Bold" Foreground="#FFFFFF" FontSize="14" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                        <Border Background="#2606B6D4" BorderBrush="#06B6D4" BorderThickness="1" CornerRadius="3" Padding="6,1" VerticalAlignment="Center">
+                                                            <TextBlock Text="TECH + BIOTIC" Foreground="#06B6D4" FontWeight="Bold" FontSize="9"/>
+                                                        </Border>
+                                                    </StackPanel>
+                                                </DockPanel>
+                                                <Border Background="#09131F" BorderBrush="#162638" BorderThickness="1" CornerRadius="3" Padding="12,8">
+                                                    <TextBlock x:Name="TxtDescSentinel" Text="Loading Sentinel perks..." Foreground="{StaticResource TextNormal}" FontSize="11.5" TextWrapping="Wrap" LineHeight="17"/>
+                                                </Border>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- CARD 1: ENGINEER (Tech Specialist) -->
+                                    <Border x:Name="CardEngineer" Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Margin="0,0,0,10">
+                                        <Grid>
+                                            <Border Width="4" HorizontalAlignment="Left" Background="#F59E0B" CornerRadius="4,0,0,4"/>
+                                            <StackPanel Margin="14,10,14,12">
+                                                <DockPanel LastChildFill="True" Margin="0,0,0,8">
+                                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="12,0,0,0">
+                                                        <Border x:Name="BadgeActiveEngineer" Background="#1A3450" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="3" Padding="8,2" Visibility="Collapsed">
+                                                            <TextBlock x:Name="TxtBadgeActiveEngineer" Text="&#x2605; ACTIVE" Foreground="#00D2FF" FontWeight="Bold" FontSize="10"/>
+                                                        </Border>
+                                                        <Button x:Name="BtnSetActiveEngineer" Content="Set Active" Click="BtnSetActiveProfile_Click" Tag="1" Style="{StaticResource MiniBtnStyle}"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="12,0,0,0">
+                                                        <TextBlock Text="Rank:" Foreground="{StaticResource TextMuted}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                                        <Button Content="&#x25C0;" Click="BtnRankDown_Click" Tag="1" Style="{StaticResource MiniBtnStyle}" Width="26" Height="24" Padding="0" Margin="0,0,6,0" ToolTip="Decrease Rank"/>
+                                                        <Border Background="#0C253D" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="3" Padding="12,2" Margin="0,0,6,0">
+                                                            <TextBlock x:Name="TxtRankEngineer" Text="Rank 1" Foreground="#00D2FF" FontWeight="Bold" FontSize="12" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <Button Content="&#x25B6;" Click="BtnRankUp_Click" Tag="1" Style="{StaticResource MiniBtnStyle}" Width="26" Height="24" Padding="0" ToolTip="Increase Rank"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                        <TextBlock Text="Engineer" FontWeight="Bold" Foreground="#FFFFFF" FontSize="14" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                        <Border Background="#26F59E0B" BorderBrush="#F59E0B" BorderThickness="1" CornerRadius="3" Padding="6,1" VerticalAlignment="Center">
+                                                            <TextBlock Text="TECH" Foreground="#F59E0B" FontWeight="Bold" FontSize="9"/>
+                                                        </Border>
+                                                    </StackPanel>
+                                                </DockPanel>
+                                                <Border Background="#09131F" BorderBrush="#162638" BorderThickness="1" CornerRadius="3" Padding="12,8">
+                                                    <TextBlock x:Name="TxtDescEngineer" Text="Loading Engineer perks..." Foreground="{StaticResource TextNormal}" FontSize="11.5" TextWrapping="Wrap" LineHeight="17"/>
+                                                </Border>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- CARD 4: VANGUARD (Combat + Biotic) -->
+                                    <Border x:Name="CardVanguard" Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Margin="0,0,0,10">
+                                        <Grid>
+                                            <Border Width="4" HorizontalAlignment="Left" Background="#EC4899" CornerRadius="4,0,0,4"/>
+                                            <StackPanel Margin="14,10,14,12">
+                                                <DockPanel LastChildFill="True" Margin="0,0,0,8">
+                                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="12,0,0,0">
+                                                        <Border x:Name="BadgeActiveVanguard" Background="#1A3450" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="3" Padding="8,2" Visibility="Collapsed">
+                                                            <TextBlock x:Name="TxtBadgeActiveVanguard" Text="&#x2605; ACTIVE" Foreground="#00D2FF" FontWeight="Bold" FontSize="10"/>
+                                                        </Border>
+                                                        <Button x:Name="BtnSetActiveVanguard" Content="Set Active" Click="BtnSetActiveProfile_Click" Tag="4" Style="{StaticResource MiniBtnStyle}"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="12,0,0,0">
+                                                        <TextBlock Text="Rank:" Foreground="{StaticResource TextMuted}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                                        <Button Content="&#x25C0;" Click="BtnRankDown_Click" Tag="4" Style="{StaticResource MiniBtnStyle}" Width="26" Height="24" Padding="0" Margin="0,0,6,0" ToolTip="Decrease Rank"/>
+                                                        <Border Background="#0C253D" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="3" Padding="12,2" Margin="0,0,6,0">
+                                                            <TextBlock x:Name="TxtRankVanguard" Text="Rank 1" Foreground="#00D2FF" FontWeight="Bold" FontSize="12" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <Button Content="&#x25B6;" Click="BtnRankUp_Click" Tag="4" Style="{StaticResource MiniBtnStyle}" Width="26" Height="24" Padding="0" ToolTip="Increase Rank"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                        <TextBlock Text="Vanguard" FontWeight="Bold" Foreground="#FFFFFF" FontSize="14" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                        <Border Background="#26EC4899" BorderBrush="#EC4899" BorderThickness="1" CornerRadius="3" Padding="6,1" VerticalAlignment="Center">
+                                                            <TextBlock Text="COMBAT + BIOTIC" Foreground="#EC4899" FontWeight="Bold" FontSize="9"/>
+                                                        </Border>
+                                                    </StackPanel>
+                                                </DockPanel>
+                                                <Border Background="#09131F" BorderBrush="#162638" BorderThickness="1" CornerRadius="3" Padding="12,8">
+                                                    <TextBlock x:Name="TxtDescVanguard" Text="Loading Vanguard perks..." Foreground="{StaticResource TextNormal}" FontSize="11.5" TextWrapping="Wrap" LineHeight="17"/>
+                                                </Border>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- CARD 2: ADEPT (Biotics Specialist) -->
+                                    <Border x:Name="CardAdept" Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Margin="0,0,0,10">
+                                        <Grid>
+                                            <Border Width="4" HorizontalAlignment="Left" Background="#A855F7" CornerRadius="4,0,0,4"/>
+                                            <StackPanel Margin="14,10,14,12">
+                                                <DockPanel LastChildFill="True" Margin="0,0,0,8">
+                                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="12,0,0,0">
+                                                        <Border x:Name="BadgeActiveAdept" Background="#1A3450" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="3" Padding="8,2" Visibility="Collapsed">
+                                                            <TextBlock x:Name="TxtBadgeActiveAdept" Text="&#x2605; ACTIVE" Foreground="#00D2FF" FontWeight="Bold" FontSize="10"/>
+                                                        </Border>
+                                                        <Button x:Name="BtnSetActiveAdept" Content="Set Active" Click="BtnSetActiveProfile_Click" Tag="2" Style="{StaticResource MiniBtnStyle}"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="12,0,0,0">
+                                                        <TextBlock Text="Rank:" Foreground="{StaticResource TextMuted}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                                        <Button Content="&#x25C0;" Click="BtnRankDown_Click" Tag="2" Style="{StaticResource MiniBtnStyle}" Width="26" Height="24" Padding="0" Margin="0,0,6,0" ToolTip="Decrease Rank"/>
+                                                        <Border Background="#0C253D" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="3" Padding="12,2" Margin="0,0,6,0">
+                                                            <TextBlock x:Name="TxtRankAdept" Text="Rank 1" Foreground="#00D2FF" FontWeight="Bold" FontSize="12" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <Button Content="&#x25B6;" Click="BtnRankUp_Click" Tag="2" Style="{StaticResource MiniBtnStyle}" Width="26" Height="24" Padding="0" ToolTip="Increase Rank"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                        <TextBlock Text="Adept" FontWeight="Bold" Foreground="#FFFFFF" FontSize="14" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                        <Border Background="#26A855F7" BorderBrush="#A855F7" BorderThickness="1" CornerRadius="3" Padding="6,1" VerticalAlignment="Center">
+                                                            <TextBlock Text="BIOTICS" Foreground="#A855F7" FontWeight="Bold" FontSize="9"/>
+                                                        </Border>
+                                                    </StackPanel>
+                                                </DockPanel>
+                                                <Border Background="#09131F" BorderBrush="#162638" BorderThickness="1" CornerRadius="3" Padding="12,8">
+                                                    <TextBlock x:Name="TxtDescAdept" Text="Loading Adept perks..." Foreground="{StaticResource TextNormal}" FontSize="11.5" TextWrapping="Wrap" LineHeight="17"/>
+                                                </Border>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- CARD 5: INFILTRATOR (Combat + Tech) -->
+                                    <Border x:Name="CardInfiltrator" Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Margin="0,0,0,10">
+                                        <Grid>
+                                            <Border Width="4" HorizontalAlignment="Left" Background="#F97316" CornerRadius="4,0,0,4"/>
+                                            <StackPanel Margin="14,10,14,12">
+                                                <DockPanel LastChildFill="True" Margin="0,0,0,8">
+                                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="12,0,0,0">
+                                                        <Border x:Name="BadgeActiveInfiltrator" Background="#1A3450" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="3" Padding="8,2" Visibility="Collapsed">
+                                                            <TextBlock x:Name="TxtBadgeActiveInfiltrator" Text="&#x2605; ACTIVE" Foreground="#00D2FF" FontWeight="Bold" FontSize="10"/>
+                                                        </Border>
+                                                        <Button x:Name="BtnSetActiveInfiltrator" Content="Set Active" Click="BtnSetActiveProfile_Click" Tag="5" Style="{StaticResource MiniBtnStyle}"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="12,0,0,0">
+                                                        <TextBlock Text="Rank:" Foreground="{StaticResource TextMuted}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                                        <Button Content="&#x25C0;" Click="BtnRankDown_Click" Tag="5" Style="{StaticResource MiniBtnStyle}" Width="26" Height="24" Padding="0" Margin="0,0,6,0" ToolTip="Decrease Rank"/>
+                                                        <Border Background="#0C253D" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="3" Padding="12,2" Margin="0,0,6,0">
+                                                            <TextBlock x:Name="TxtRankInfiltrator" Text="Rank 1" Foreground="#00D2FF" FontWeight="Bold" FontSize="12" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <Button Content="&#x25B6;" Click="BtnRankUp_Click" Tag="5" Style="{StaticResource MiniBtnStyle}" Width="26" Height="24" Padding="0" ToolTip="Increase Rank"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                        <TextBlock Text="Infiltrator" FontWeight="Bold" Foreground="#FFFFFF" FontSize="14" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                        <Border Background="#26F97316" BorderBrush="#F97316" BorderThickness="1" CornerRadius="3" Padding="6,1" VerticalAlignment="Center">
+                                                            <TextBlock Text="COMBAT + TECH" Foreground="#F97316" FontWeight="Bold" FontSize="9"/>
+                                                        </Border>
+                                                    </StackPanel>
+                                                </DockPanel>
+                                                <Border Background="#09131F" BorderBrush="#162638" BorderThickness="1" CornerRadius="3" Padding="12,8">
+                                                    <TextBlock x:Name="TxtDescInfiltrator" Text="Loading Infiltrator perks..." Foreground="{StaticResource TextNormal}" FontSize="11.5" TextWrapping="Wrap" LineHeight="17"/>
+                                                </Border>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- CARD 6: EXPLORER (All-Rounder Specialist) -->
+                                    <Border x:Name="CardExplorer" Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Margin="0,0,0,10">
+                                        <Grid>
+                                            <Border Width="4" HorizontalAlignment="Left" Background="#00D2FF" CornerRadius="4,0,0,4"/>
+                                            <StackPanel Margin="14,10,14,12">
+                                                <DockPanel LastChildFill="True" Margin="0,0,0,8">
+                                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="12,0,0,0">
+                                                        <Border x:Name="BadgeActiveExplorer" Background="#1A3450" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="3" Padding="8,2" Visibility="Collapsed">
+                                                            <TextBlock x:Name="TxtBadgeActiveExplorer" Text="&#x2605; ACTIVE" Foreground="#00D2FF" FontWeight="Bold" FontSize="10"/>
+                                                        </Border>
+                                                        <Button x:Name="BtnSetActiveExplorer" Content="Set Active" Click="BtnSetActiveProfile_Click" Tag="6" Style="{StaticResource MiniBtnStyle}"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="12,0,0,0">
+                                                        <TextBlock Text="Rank:" Foreground="{StaticResource TextMuted}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                                        <Button Content="&#x25C0;" Click="BtnRankDown_Click" Tag="6" Style="{StaticResource MiniBtnStyle}" Width="26" Height="24" Padding="0" Margin="0,0,6,0" ToolTip="Decrease Rank"/>
+                                                        <Border Background="#0C253D" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="3" Padding="12,2" Margin="0,0,6,0">
+                                                            <TextBlock x:Name="TxtRankExplorer" Text="Rank 1" Foreground="#00D2FF" FontWeight="Bold" FontSize="12" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <Button Content="&#x25B6;" Click="BtnRankUp_Click" Tag="6" Style="{StaticResource MiniBtnStyle}" Width="26" Height="24" Padding="0" ToolTip="Increase Rank"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                        <TextBlock Text="Explorer" FontWeight="Bold" Foreground="#FFFFFF" FontSize="14" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                        <Border Background="#2600D2FF" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="3" Padding="6,1" VerticalAlignment="Center">
+                                                            <TextBlock Text="ALL-ROUNDER SPECIALIST" Foreground="#00D2FF" FontWeight="Bold" FontSize="9"/>
+                                                        </Border>
+                                                    </StackPanel>
+                                                </DockPanel>
+                                                <Border Background="#09131F" BorderBrush="#162638" BorderThickness="1" CornerRadius="3" Padding="12,8">
+                                                    <TextBlock x:Name="TxtDescExplorer" Text="Loading Explorer perks..." Foreground="{StaticResource TextNormal}" FontSize="11.5" TextWrapping="Wrap" LineHeight="17"/>
+                                                </Border>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+
+                                </StackPanel>
+
+                            </StackPanel>
+                        </ScrollViewer>
+                    </TabItem>
+
+                    <!-- ============================================================== -->
+                    <!-- TAB 4: RESOURCES                                               -->
+                    <!-- ============================================================== -->
+                    <TabItem Header="📦 Resources">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                            <StackPanel Margin="10,10,10,16">
+
+                                <!-- TOP ROW: MINERALS (LEFT) vs TECH, BIO & SPECIAL ITEMS (RIGHT) -->
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1.1*"/>
+                                        <ColumnDefinition Width="0.9*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- LEFT: MINERALS (17 ELEMENTS) -->
+                                    <Border Grid.Column="0" Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Margin="0,0,6,0">
+                                        <StackPanel>
+                                            <Border Background="{StaticResource CardHeaderBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="0,0,0,1" Padding="12,6" CornerRadius="3,3,0,0">
+                                                <DockPanel LastChildFill="True">
+                                                    <TextBlock DockPanel.Dock="Right" Text="17 Elements" Foreground="{StaticResource TextMuted}" FontSize="11" VerticalAlignment="Center"/>
+                                                    <TextBlock Text="⛏ Minerals &amp; Core Elements" FontWeight="Bold" Foreground="{StaticResource AccentColor}" FontSize="13" VerticalAlignment="Center"/>
+                                                </DockPanel>
+                                            </Border>
+                                            <ItemsControl x:Name="IcMinerals" Margin="10,8,10,10">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <UniformGrid Columns="2"/>
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid Margin="6,3">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="75"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <TextBlock Grid.Column="0" Text="{Binding FriendlyName}" VerticalAlignment="Center" Foreground="{StaticResource TextNormal}" FontWeight="SemiBold" FontSize="11"/>
+                                                            <TextBox Grid.Column="1" Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" HorizontalContentAlignment="Right" Margin="4,0,0,0"/>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- RIGHT: TECH MATERIALS, BIO MATERIALS & SPECIAL ITEMS -->
+                                    <StackPanel Grid.Column="1" Margin="6,0,0,0">
+                                        <!-- SPECIAL ITEMS (Remnant Decryption Keys) -->
+                                        <Border Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Margin="0,0,0,8">
+                                            <StackPanel>
+                                                <Border Background="{StaticResource CardHeaderBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="0,0,0,1" Padding="12,5" CornerRadius="3,3,0,0">
+                                                    <TextBlock Text="🗝 Special Items (Remnant Decryption Keys)" FontWeight="Bold" Foreground="{StaticResource AccentColor}" FontSize="12" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <DockPanel Margin="10,8,10,8" LastChildFill="True">
+                                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
+                                                        <Button Content="+1 Key" Click="BtnAdd1Key_Click" Style="{StaticResource MiniBtnStyle}" Padding="8,2" Margin="0,0,4,0"/>
+                                                        <Button Content="+5 Keys" Click="BtnAdd5Keys_Click" Style="{StaticResource MiniBtnStyle}" Padding="8,2"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                        <TextBlock Text="Decryption Keys:" FontWeight="SemiBold" Foreground="{StaticResource TextNormal}" FontSize="11" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                                        <TextBox x:Name="TxtRemnantKeys" Width="60" HorizontalContentAlignment="Center" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                </DockPanel>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <!-- TECH MATERIALS (4 Items) -->
+                                        <Border Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Margin="0,0,0,8">
+                                            <StackPanel>
+                                                <Border Background="{StaticResource CardHeaderBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="0,0,0,1" Padding="12,5" CornerRadius="3,3,0,0">
+                                                    <TextBlock Text="⚙️ Tech Materials (4 Items)" FontWeight="Bold" Foreground="{StaticResource AccentColor}" FontSize="12" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <ItemsControl x:Name="IcTechMaterials" Margin="8,6,8,6">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <UniformGrid Columns="2"/>
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Grid Margin="4,2">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="*"/>
+                                                                    <ColumnDefinition Width="65"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock Grid.Column="0" Text="{Binding FriendlyName}" VerticalAlignment="Center" Foreground="{StaticResource TextNormal}" FontWeight="SemiBold" FontSize="11" ToolTip="{Binding Description}"/>
+                                                                <TextBox Grid.Column="1" Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" HorizontalContentAlignment="Right" Margin="4,0,0,0"/>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <!-- BIO MATERIALS (6 Items) -->
+                                        <Border Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4">
+                                            <StackPanel>
+                                                <Border Background="{StaticResource CardHeaderBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="0,0,0,1" Padding="12,5" CornerRadius="3,3,0,0">
+                                                    <TextBlock Text="🧬 Bio Materials (6 Items)" FontWeight="Bold" Foreground="{StaticResource AccentColor}" FontSize="12" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <ItemsControl x:Name="IcBioMaterials" Margin="8,6,8,6">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <UniformGrid Columns="2"/>
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Grid Margin="4,2">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="*"/>
+                                                                    <ColumnDefinition Width="65"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock Grid.Column="0" Text="{Binding FriendlyName}" VerticalAlignment="Center" Foreground="{StaticResource TextNormal}" FontWeight="SemiBold" FontSize="11" ToolTip="{Binding Description}"/>
+                                                                <TextBox Grid.Column="1" Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" HorizontalContentAlignment="Right" Margin="4,0,0,0"/>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                </Grid>
+
+                                <!-- MIDDLE ROW: AUGMENTATIONS & SALVAGE -->
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- AUGMENTATIONS (47 Items) -->
+                                    <Border Grid.Column="0" Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Margin="0,0,6,0">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="210"/>
+                                            </Grid.RowDefinitions>
+
+                                            <!-- Header -->
+                                            <Border Grid.Row="0" Background="{StaticResource CardHeaderBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="0,0,0,1" Padding="12,6" CornerRadius="3,3,0,0">
+                                                <TextBlock Text="⚡ Augmentations (47 Crafting Modules)" FontWeight="Bold" Foreground="{StaticResource AccentColor}" FontSize="13" VerticalAlignment="Center"/>
+                                            </Border>
+
+                                            <!-- Search & Action Toolbar -->
+                                            <DockPanel Grid.Row="1" Margin="10,6,10,6" LastChildFill="True">
+                                                <Button DockPanel.Dock="Right" Content="✕" Click="BtnClearAugmentationsSearch_Click" Style="{StaticResource MiniBtnStyle}" Width="22" Height="22" Padding="0" Margin="4,0,0,0" ToolTip="Clear search"/>
+                                        <TextBlock Text="&#x1F50D; Search:" Foreground="{StaticResource TextMuted}" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                                <TextBox x:Name="TxtSearchAugmentations" TextChanged="TxtSearchAugmentations_TextChanged" VerticalAlignment="Center"/>
+                                            </DockPanel>
+
+                                            <!-- DataGrid -->
+                                            <DataGrid Grid.Row="2" x:Name="DgAugmentations" Margin="8,0,8,8" RowHeight="46">
+                                                <DataGrid.Columns>
+                                                    <DataGridTemplateColumn Header="Augmentation Name" Width="*" MinWidth="320" SortMemberPath="FriendlyName">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <StackPanel VerticalAlignment="Center" Margin="4,2">
+                                                                    <TextBlock Text="{Binding FriendlyName}" FontWeight="Bold" Foreground="{StaticResource TextNormal}" FontSize="11" Margin="0,0,0,2"/>
+                                                                    <TextBlock Text="{Binding Description}" Foreground="{StaticResource TextMuted}" FontSize="10" TextTrimming="CharacterEllipsis"/>
+                                                                </StackPanel>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                    <DataGridTemplateColumn Header="Rarity" Width="95" SortMemberPath="Rarity">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <Border Background="{Binding RarityBg}" BorderBrush="{Binding RarityBorder}" BorderThickness="1" CornerRadius="3" Padding="6,2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                    <TextBlock Text="{Binding RarityName}" Foreground="{Binding RarityColor}" FontWeight="Bold" FontSize="10"/>
+                                                                </Border>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                    <DataGridTemplateColumn Header="Qty" Width="70" SortMemberPath="Quantity">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <TextBox Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" Width="55" HorizontalContentAlignment="Center" VerticalAlignment="Center"/>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- SALVAGE (48 Items) -->
+                                    <Border Grid.Column="1" Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Margin="6,0,0,0">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="210"/>
+                                            </Grid.RowDefinitions>
+
+                                            <!-- Header -->
+                                            <Border Grid.Row="0" Background="{StaticResource CardHeaderBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="0,0,0,1" Padding="12,6" CornerRadius="3,3,0,0">
+                                                <TextBlock Text="💎 Salvage &amp; Valuables (48 Items)" FontWeight="Bold" Foreground="{StaticResource AccentColor}" FontSize="13" VerticalAlignment="Center"/>
+                                            </Border>
+
+                                            <!-- Search & Action Toolbar -->
+                                            <DockPanel Grid.Row="1" Margin="10,6,10,6" LastChildFill="True">
+                                                <Button DockPanel.Dock="Right" Content="✕" Click="BtnClearSalvageSearch_Click" Style="{StaticResource MiniBtnStyle}" Width="22" Height="22" Padding="0" Margin="4,0,0,0" ToolTip="Clear search"/>
+                                        <TextBlock Text="&#x1F50D; Search:" Foreground="{StaticResource TextMuted}" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                                <TextBox x:Name="TxtSearchSalvage" TextChanged="TxtSearchSalvage_TextChanged" VerticalAlignment="Center"/>
+                                            </DockPanel>
+
+                                            <!-- DataGrid -->
+                                            <DataGrid Grid.Row="2" x:Name="DgSalvage" Margin="8,0,8,8" RowHeight="46">
+                                                <DataGrid.Columns>
+                                                    <DataGridTemplateColumn Header="Salvage Item" Width="*" MinWidth="320" SortMemberPath="FriendlyName">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <StackPanel VerticalAlignment="Center" Margin="4,2">
+                                                                    <TextBlock Text="{Binding FriendlyName}" FontWeight="Bold" Foreground="{StaticResource TextNormal}" FontSize="11" Margin="0,0,0,2"/>
+                                                                    <TextBlock Text="{Binding Description}" Foreground="{StaticResource TextMuted}" FontSize="10" TextTrimming="CharacterEllipsis"/>
+                                                                </StackPanel>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                    <DataGridTemplateColumn Header="Rarity" Width="95" SortMemberPath="Rarity">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <Border Background="{Binding RarityBg}" BorderBrush="{Binding RarityBorder}" BorderThickness="1" CornerRadius="3" Padding="6,2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                    <TextBlock Text="{Binding RarityName}" Foreground="{Binding RarityColor}" FontWeight="Bold" FontSize="10"/>
+                                                                </Border>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                    <DataGridTemplateColumn Header="Qty" Width="70" SortMemberPath="Quantity">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <TextBox Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" Width="55" HorizontalContentAlignment="Center" VerticalAlignment="Center"/>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+
+                                <!-- BOTTOM ROW: SINGLE-LINE ADD ITEM TO INVENTORY BAR -->
+                                <Border Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Padding="12,8">
+                                    <DockPanel LastChildFill="True">
+                                        <!-- Right: Add to Inventory Button -->
+                                        <Button DockPanel.Dock="Right" Content="➕ Add to Inventory" Click="BtnResAddItemToInventory_Click" Style="{StaticResource AccentButton}" Padding="16,5" FontSize="12" FontWeight="Bold" VerticalAlignment="Center" Margin="10,0,0,0"/>
+
+                                        <!-- Left / Center Controls on One Continuous Line -->
+                                        <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="➕ Add Item:" FontWeight="Bold" Foreground="{StaticResource AccentColor}" FontSize="12" VerticalAlignment="Center" Margin="0,0,10,0"/>
+
+                                            <TextBlock Text="Category:" Foreground="{StaticResource TextMuted}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                            <ComboBox x:Name="CmbResAddCategory" Width="120" SelectionChanged="CmbResAddCategory_SelectionChanged" Margin="0,0,12,0" VerticalAlignment="Center">
+                                                <ComboBoxItem Content="Weapons" IsSelected="True"/>
+                                                <ComboBoxItem Content="Weapon Mods"/>
+                                                <ComboBoxItem Content="Armor"/>
+                                                <ComboBoxItem Content="Fusion Mods"/>
+                                                <ComboBoxItem Content="Consumables"/>
+                                            </ComboBox>
+
+                                            <TextBlock Text="Filter:" Foreground="{StaticResource TextMuted}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                            <TextBox x:Name="TxtResCatalogSearch" Width="130" TextChanged="TxtResCatalogSearch_TextChanged" VerticalAlignment="Center" Margin="0,0,12,0" ToolTip="Type to filter catalog"/>
+
+                                            <TextBlock Text="Item:" Foreground="{StaticResource TextMuted}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                            <ComboBox x:Name="CmbResAddCatalogItem" Width="220" SelectionChanged="CmbResAddCatalogItem_SelectionChanged" Margin="0,0,12,0" VerticalAlignment="Center"/>
+
+                                            <TextBlock x:Name="LblResAddTier" Text="Tier:" Foreground="{StaticResource TextMuted}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                            <ComboBox x:Name="CmbResAddTier" Width="85" Margin="0,0,12,0" VerticalAlignment="Center"/>
+
+                                            <TextBlock Text="Qty:" Foreground="{StaticResource TextMuted}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                            <Button Content="-" Click="BtnResAddQtyDown_Click" Style="{StaticResource MiniBtnStyle}" Width="20" Height="24" Padding="0" Margin="0,0,2,0" VerticalAlignment="Center"/>
+                                            <TextBox x:Name="TxtResAddQuantity" Text="1" Width="45" HorizontalContentAlignment="Center" VerticalAlignment="Center" Margin="0,0,2,0"/>
+                                            <Button Content="+" Click="BtnResAddQtyUp_Click" Style="{StaticResource MiniBtnStyle}" Width="20" Height="24" Padding="0" VerticalAlignment="Center"/>
+                                        </WrapPanel>
+                                    </DockPanel>
+                                </Border>
+
+                            </StackPanel>
+                        </ScrollViewer>
+                    </TabItem>
+
+                </TabControl>
+            </Grid>
+
+            <!-- 5. STATUS FOOTER -->
+            <Border Grid.Row="4" Background="{StaticResource TitleBarBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="0,1,0,0" Padding="14,4">
+                <DockPanel LastChildFill="True">
+                    <TextBlock x:Name="TxtFooterStatus" Text="Ready. Click 'Open Save...' to begin." Foreground="{StaticResource TextMuted}" FontSize="11" VerticalAlignment="Center"/>
+                </DockPanel>
+            </Border>
+        </Grid>
+
+        <!-- THEMED IN-EDITOR MODAL OVERLAY: ABOUT, HOW-TO GUIDE & LICENSE -->
+                <!-- THEMED IN-EDITOR MODAL OVERLAY: ABOUT, HOW-TO GUIDE & LICENSE -->
+        <Grid x:Name="OverlayAboutModal" Visibility="Collapsed" Panel.ZIndex="1000" Background="#DD040810">
+            <Border Width="960" Height="700" Background="#0A121D" BorderBrush="#00D2FF" BorderThickness="1.5" CornerRadius="6" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="35" Color="#00D2FF" Opacity="0.4" ShadowDepth="0"/>
+                </Border.Effect>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/> <!-- Title Bar -->
+                        <RowDefinition Height="Auto"/> <!-- Sub-Header Strip -->
+                        <RowDefinition Height="*"/>    <!-- Modal Tabs Content -->
+                        <RowDefinition Height="Auto"/> <!-- Footer Actions -->
+                    </Grid.RowDefinitions>
+
+                    <!-- 1. Modal Title Bar -->
+                    <Border Grid.Row="0" Background="{StaticResource TitleBarBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="0,0,0,1" Padding="14,10" CornerRadius="5,5,0,0">
+                        <DockPanel LastChildFill="True">
+                            <Button Content="✕" Click="BtnCloseAbout_Click" DockPanel.Dock="Right" HorizontalAlignment="Right" Background="Transparent" Foreground="#A0C0E0" BorderThickness="0" FontSize="16" FontWeight="Bold" Cursor="Hand" Padding="8,0" ToolTip="Close Dialog"/>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Image Source="Resources/emblem.png" Height="22" Width="34" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="ME Andromeda Basic Save Editor" FontWeight="Bold" Foreground="#00D2FF" FontSize="14" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DockPanel>
+                    </Border>
+
+                    <!-- 2. Sub-Header Info Strip -->
+                    <Border Grid.Row="1" Background="#060C14" BorderBrush="{StaticResource BorderColor}" BorderThickness="0,0,0,1" Padding="14,6">
+                        <DockPanel LastChildFill="True">
+                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
+                                <TextBlock Text="Support Email:" Foreground="{StaticResource TextMuted}" FontWeight="Bold" FontSize="11" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                <TextBlock VerticalAlignment="Center">
+                                    <Hyperlink NavigateUri="mailto:roxassmithsolutions@proton.me" RequestNavigate="Hyperlink_RequestNavigate" Foreground="#00D2FF" TextDecorations="Underline" Cursor="Hand">
+                                        <Run Text="roxassmithsolutions@proton.me" FontWeight="SemiBold" FontSize="11"/>
+                                    </Hyperlink>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Border Background="#1A3450" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="3" Padding="8,2">
+                                    <TextBlock Text="v2.0 Modernized Edition" Foreground="#00D2FF" FontWeight="Bold" FontSize="10"/>
+                                </Border>
+                            </StackPanel>
+                        </DockPanel>
+                    </Border>
+
+                    <!-- 3. Modal Tabs Content -->
+                    <TabControl x:Name="ModalAboutTabs" Grid.Row="2" Background="Transparent" BorderThickness="0" Margin="10,8,10,6">
+
+                        <!-- TAB 1: ABOUT -->
+                        <TabItem Header="&#x2139;&#xFE0F; About">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="4,8,4,8">
+                                <StackPanel Margin="6,0,14,10">
+
+                                    <!-- Welcome & Save Editor Overview Card -->
+                                    <Border Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Padding="16,14" Margin="0,0,0,10">
+                                        <Grid>
+                                            <Border Width="4" HorizontalAlignment="Left" Background="#00D2FF" CornerRadius="4,0,0,4"/>
+                                            <StackPanel Margin="14,0,0,0">
+                                                <TextBlock Text="Mass Effect Andromeda Save Editor" Foreground="#00D2FF" FontWeight="Bold" FontSize="15" Margin="0,0,0,6"/>
+                                                <TextBlock Text="A modern, safe, and comprehensive save editing suite for Mass Effect: Andromeda on PC, developed by RoxasSmithSolutions (RSS). This editor gives you complete control over your Andromeda playthrough, allowing you to tailor Ryder's progression, armory, combat profiles, and crafting supplies with an intuitive graphical interface." Foreground="{StaticResource TextNormal}" FontSize="11.5" TextWrapping="Wrap" LineHeight="17" Margin="0,0,0,8"/>
+                                                <TextBlock Text="Built with deep byte-level Frostbite 3 engine chunk parsing to ensure save integrity, preservation of binary chunk headers, and zero risk of save corruption." Foreground="{StaticResource TextMuted}" FontSize="11" TextWrapping="Wrap" LineHeight="16"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- Core Features Card -->
+                                    <Border Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Padding="16,14" Margin="0,0,0,10">
+                                        <Grid>
+                                            <Border Width="4" HorizontalAlignment="Left" Background="#06B6D4" CornerRadius="4,0,0,4"/>
+                                            <StackPanel Margin="14,0,0,0">
+                                                <TextBlock Text="Key Features &amp; Editor Capabilities" Foreground="#06B6D4" FontWeight="Bold" FontSize="13" Margin="0,0,0,8"/>
+                                                <TextBlock Text="• Role-Play &amp; Campaign: Customize Ryder's name, gender (Scott or Sara), campaign difficulty level, and current planet or starship location." Foreground="{StaticResource TextNormal}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,3"/>
+                                                <TextBlock Text="• Progression &amp; Stats: Modify Ryder Level, XP, Skill Points, Credits, Nexus Level, A.V.P., and Research Data (Milky Way, Heleus, Remnant)." Foreground="{StaticResource TextNormal}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,3"/>
+                                                <TextBlock Text="• Inventory Capacity Management: Review and customize Ryder's item capacity (100 base, 150 with Trade Capacity I, 200 with Trade Capacity II) to avoid encumbrance." Foreground="{StaticResource TextNormal}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,3"/>
+                                                <TextBlock Text="• Armory &amp; Tier X Gear: Browse, manage, and add Weapons, Weapon Mods, Armor, Fusion Mods, and Consumables. Upgrade any piece of gear up to Tier X (Max Tier) in one click." Foreground="{StaticResource TextNormal}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,3"/>
+                                                <TextBlock Text="• Profiles &amp; Dynamic Archetype Themes: Switch active combat profiles with archetype illumination and adjust ranks from Rank 1 to 6 with real-time stat bonuses." Foreground="{StaticResource TextNormal}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,3"/>
+                                                <TextBlock Text="• Resources &amp; Decryption: Edit all 17 minerals, bio/tech materials, augmentations, and add Remnant Decryption Keys to bypass monolith glyph puzzles." Foreground="{StaticResource TextNormal}" FontSize="11" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- Automated Safety & Backups Card -->
+                                    <Border Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Padding="16,14" Margin="0,0,0,10">
+                                        <Grid>
+                                            <Border Width="4" HorizontalAlignment="Left" Background="#10B981" CornerRadius="4,0,0,4"/>
+                                            <StackPanel Margin="14,0,0,0">
+                                                <DockPanel LastChildFill="True" Margin="0,0,0,6">
+                                                    <Border Background="#2610B981" BorderBrush="#10B981" BorderThickness="1" CornerRadius="3" Padding="8,2" DockPanel.Dock="Right">
+                                                        <TextBlock Text="AUTOMATIC BACKUPS" Foreground="#10B981" FontWeight="Bold" FontSize="9"/>
+                                                    </Border>
+                                                    <TextBlock Text="Zero-Risk Data Protection" Foreground="#10B981" FontWeight="Bold" FontSize="13"/>
+                                                </DockPanel>
+                                                <TextBlock Text="• Pre-Save Backup Generation: Every time you click Save, the editor automatically creates an exact, timestamped copy of your original file before writing changes. Backups are stored in:" Foreground="{StaticResource TextNormal}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,4"/>
+                                                <Border Background="#09131F" BorderBrush="#1C2E42" BorderThickness="1" CornerRadius="3" Padding="10,6" Margin="0,0,0,6">
+                                                    <TextBlock Text="Documents\BioWare\Mass Effect Andromeda\Save\ME Andromeda Save Editor Backup" Foreground="#00D2FF" FontFamily="Consolas" FontSize="11"/>
+                                                </Border>
+                                                <TextBlock Text="• Instant Restore: Click '↺ Restore from Backup...' in the toolbar to inspect snapshots and revert anytime." Foreground="{StaticResource TextMuted}" FontSize="11" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- Developer Support & Inquiries Card -->
+                                    <Border Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Padding="16,14">
+                                        <Grid>
+                                            <Border Width="4" HorizontalAlignment="Left" Background="#A855F7" CornerRadius="4,0,0,4"/>
+                                            <StackPanel Margin="14,0,0,0">
+                                                <DockPanel LastChildFill="True" Margin="0,0,0,6">
+                                                    <Border Background="#26A855F7" BorderBrush="#A855F7" BorderThickness="1" CornerRadius="3" Padding="8,2" DockPanel.Dock="Right">
+                                                        <TextBlock Text="SUPPORT &amp; INQUIRIES" Foreground="#A855F7" FontWeight="Bold" FontSize="9"/>
+                                                    </Border>
+                                                    <TextBlock Text="Developer Contact &amp; Community Feedback" Foreground="#A855F7" FontWeight="Bold" FontSize="13"/>
+                                                </DockPanel>
+                                                <TextBlock Text="• Developer &amp; Maintenance: Developed and maintained by RoxasSmithSolutions (RSS) for the Mass Effect: Andromeda gaming community." Foreground="{StaticResource TextNormal}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,4"/>
+                                                <TextBlock Text="• Technical Support &amp; Feature Requests: For technical assistance, bug reports, or feature requests, contact RoxasSmithSolutions directly at RoxasSmithSolutions@proton.me." Foreground="{StaticResource TextNormal}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,4"/>
+                                                <TextBlock Text="• Community License: Free software for personal and gaming use governed by the laws of England and Wales (UK). See the Software License tab for full terms." Foreground="{StaticResource TextMuted}" FontSize="11" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+
+                                </StackPanel>
+                            </ScrollViewer>
+                        </TabItem>
+
+                        <!-- TAB 2: HOW-TO GUIDE -->
+                        <TabItem Header="&#x1F4D6; How-To Guide">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="4,8,4,8">
+                                <StackPanel Margin="6,0,14,10">
+
+                                    <!-- Step 1 -->
+                                    <Border Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Padding="16,12" Margin="0,0,0,10">
+                                        <StackPanel>
+                                            <DockPanel LastChildFill="True" Margin="0,0,0,6">
+                                                <Border Background="#1A3450" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="3" Padding="8,2" DockPanel.Dock="Right">
+                                                    <TextBlock Text="STEP 1" Foreground="#00D2FF" FontWeight="Bold" FontSize="10"/>
+                                                </Border>
+                                                <TextBlock Text="📂 Step 1: Open Your Save File" FontWeight="Bold" Foreground="#00D2FF" FontSize="13"/>
+                                            </DockPanel>
+                                            <TextBlock Text="1. Click '📂 Open Save...' in the top menu bar." Foreground="{StaticResource TextNormal}" FontSize="11.5" Margin="0,0,0,2"/>
+                                            <TextBlock Text="2. The dialog automatically opens your Andromeda save directory: Documents\BioWare\Mass Effect Andromeda\Save." Foreground="{StaticResource TextNormal}" FontSize="11.5" Margin="0,0,0,2"/>
+                                            <TextBlock Text="3. Select any Manual Save or Auto-Save (e.g. Careerd9c6ea69-0ManualSave). All save data loads instantly into the editor." Foreground="{StaticResource TextMuted}" FontSize="11.5" Margin="0,0,0,8"/>
+                                            
+                                            <!-- Screenshot Preview -->
+                                            <Border BorderBrush="#1C2E42" BorderThickness="1" CornerRadius="3" Background="#050B13" Padding="2" HorizontalAlignment="Center">
+                                                <Image Source="Resources/guide_general.png" MaxHeight="220" Stretch="Uniform"/>
+                                            </Border>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Step 2 -->
+                                    <Border Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Padding="16,12" Margin="0,0,0,10">
+                                        <StackPanel>
+                                            <DockPanel LastChildFill="True" Margin="0,0,0,6">
+                                                <Border Background="#1A3450" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="3" Padding="8,2" DockPanel.Dock="Right">
+                                                    <TextBlock Text="STEP 2" Foreground="#00D2FF" FontWeight="Bold" FontSize="10"/>
+                                                </Border>
+                                                <TextBlock Text="⚙️ Step 2: Edit Campaign, Level &amp; Progression (General Tab)" FontWeight="Bold" Foreground="#00D2FF" FontSize="13"/>
+                                            </DockPanel>
+                                            <TextBlock Text="• Role-Play: Change Pathfinder Name, Gender (Scott / Sara), and Active Combat Profile." Foreground="{StaticResource TextNormal}" FontSize="11.5" Margin="0,0,0,2"/>
+                                            <TextBlock Text="• Campaign: Modify Difficulty, Play Time, and Current Location (Tempest, Nexus, or Planet)." Foreground="{StaticResource TextNormal}" FontSize="11.5" Margin="0,0,0,2"/>
+                                            <TextBlock Text="• Progression: Set Ryder Level, XP, Skill Points, Credits, Nexus Level, A.V.P., and Research Data." Foreground="{StaticResource TextNormal}" FontSize="11.5" Margin="0,0,0,2"/>
+                                            <TextBlock Text="• Item Limit: Manage inventory capacity (100 base, 150/200 with Trade Capacity perks)." Foreground="{StaticResource TextMuted}" FontSize="11.5"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Step 3 -->
+                                    <Border Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Padding="16,12" Margin="0,0,0,10">
+                                        <StackPanel>
+                                            <DockPanel LastChildFill="True" Margin="0,0,0,6">
+                                                <Border Background="#1A3450" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="3" Padding="8,2" DockPanel.Dock="Right">
+                                                    <TextBlock Text="STEP 3" Foreground="#00D2FF" FontWeight="Bold" FontSize="10"/>
+                                                </Border>
+                                                <TextBlock Text="⚔️ Step 3: Manage Weapons, Armor &amp; Tiers (Armory Tab)" FontWeight="Bold" Foreground="#00D2FF" FontSize="13"/>
+                                            </DockPanel>
+                                            <TextBlock Text="1. Filter items by category: Weapons, Weapon Mods, Armor, Fusion Mods, or Consumables." Foreground="{StaticResource TextNormal}" FontSize="11.5" Margin="0,0,0,2"/>
+                                            <TextBlock Text="2. Sub-Type Filter: Narrow down to Assault Rifles, Shotguns, Helmets, Full Outfits, etc." Foreground="{StaticResource TextNormal}" FontSize="11.5" Margin="0,0,0,2"/>
+                                            <TextBlock Text="3. Change Tier: Click the Tier dropdown on any weapon/armor to instantly upgrade it to Tier X (Max Tier)." Foreground="{StaticResource TextNormal}" FontSize="11.5" Margin="0,0,0,2"/>
+                                            <TextBlock Text="4. Add New Items: Use the bottom bar to choose an item, select Tier &amp; Quantity, and click 'Add to Inventory'." Foreground="{StaticResource TextMuted}" FontSize="11.5" Margin="0,0,0,8"/>
+
+                                            <!-- Screenshot Preview -->
+                                            <Border BorderBrush="#1C2E42" BorderThickness="1" CornerRadius="3" Background="#050B13" Padding="2" HorizontalAlignment="Center">
+                                                <Image Source="Resources/guide_armory.png" MaxHeight="220" Stretch="Uniform"/>
+                                            </Border>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Step 4 -->
+                                    <Border Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Padding="16,12" Margin="0,0,0,10">
+                                        <StackPanel>
+                                            <DockPanel LastChildFill="True" Margin="0,0,0,6">
+                                                <Border Background="#1A3450" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="3" Padding="8,2" DockPanel.Dock="Right">
+                                                    <TextBlock Text="STEP 4" Foreground="#00D2FF" FontWeight="Bold" FontSize="10"/>
+                                                </Border>
+                                                <TextBlock Text="💠 Step 4: Adjust Combat Profiles &amp; Passives (Profiles Tab)" FontWeight="Bold" Foreground="#00D2FF" FontSize="13"/>
+                                            </DockPanel>
+                                            <TextBlock Text="1. Active Loadout Hero Card: Summarizes your current active combat profile, passive abilities, and scaled combat perks." Foreground="{StaticResource TextNormal}" FontSize="11.5" Margin="0,0,0,2"/>
+                                            <TextBlock Text="2. Arrow Steppers (◀ Rank X ▶): Click the arrows to adjust Soldier, Sentinel, Engineer, Vanguard, Adept, Infiltrator, or Explorer from Rank 1 to 6." Foreground="{StaticResource TextNormal}" FontSize="11.5" Margin="0,0,0,2"/>
+                                            <TextBlock Text="3. Real-Time Stat Previews: Live perk descriptions update dynamically to show scaled weapon damage, tech recharge, biotic force, and unique abilities." Foreground="{StaticResource TextNormal}" FontSize="11.5" Margin="0,0,0,2"/>
+                                            <TextBlock Text="4. Dynamic Archetype Switcher: Click 'Set Active' on any card. The entire active loadout and profile card instantly illuminate in that profile's signature archetype color (Soldier Red, Sentinel Teal, Engineer Amber, Vanguard Magenta, Adept Purple, Infiltrator Orange, Explorer Cyan)." Foreground="{StaticResource TextMuted}" FontSize="11.5" Margin="0,0,0,8"/>
+
+                                            <!-- Screenshot Preview -->
+                                            <Border BorderBrush="#1C2E42" BorderThickness="1" CornerRadius="3" Background="#050B13" Padding="2" HorizontalAlignment="Center">
+                                                <Image Source="Resources/guide_profiles.png" MaxHeight="220" Stretch="Uniform"/>
+                                            </Border>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Step 5 -->
+                                    <Border Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Padding="16,12" Margin="0,0,0,10">
+                                        <StackPanel>
+                                            <DockPanel LastChildFill="True" Margin="0,0,0,6">
+                                                <Border Background="#1A3450" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="3" Padding="8,2" DockPanel.Dock="Right">
+                                                    <TextBlock Text="STEP 5" Foreground="#00D2FF" FontWeight="Bold" FontSize="10"/>
+                                                </Border>
+                                                <TextBlock Text="📦 Step 5: Crafting Supplies &amp; Decryption Keys (Resources Tab)" FontWeight="Bold" Foreground="#00D2FF" FontSize="13"/>
+                                            </DockPanel>
+                                            <TextBlock Text="• Minerals: Adjust amounts for all 17 core elements (Element Zero, Platinum, Iron, Nickel, Titanium, etc.)." Foreground="{StaticResource TextNormal}" FontSize="11.5" Margin="0,0,0,2"/>
+                                            <TextBlock Text="• Tech &amp; Bio Materials: Set quantities for Angaran Meditation Crystals, Remnant Core, Kett Alloy, etc." Foreground="{StaticResource TextNormal}" FontSize="11.5" Margin="0,0,0,2"/>
+                                            <TextBlock Text="• Remnant Decryption Keys: Click '+1 Key' or '+5 Keys' to easily bypass monolith decryption puzzles." Foreground="{StaticResource TextNormal}" FontSize="11.5" Margin="0,0,0,2"/>
+                                            <TextBlock Text="• Augmentations &amp; Salvage: Search and customize all 47 weapon/armor crafting modules." Foreground="{StaticResource TextMuted}" FontSize="11.5" Margin="0,0,0,8"/>
+
+                                            <!-- Screenshot Preview -->
+                                            <Border BorderBrush="#1C2E42" BorderThickness="1" CornerRadius="3" Background="#050B13" Padding="2" HorizontalAlignment="Center">
+                                                <Image Source="Resources/guide_resources.png" MaxHeight="220" Stretch="Uniform"/>
+                                            </Border>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Step 6 -->
+                                    <Border Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Padding="16,12">
+                                        <StackPanel>
+                                            <DockPanel LastChildFill="True" Margin="0,0,0,6">
+                                                <Border Background="#10B981" BorderBrush="#10B981" BorderThickness="1" CornerRadius="3" Padding="8,2" DockPanel.Dock="Right">
+                                                    <TextBlock Text="STEP 6" Foreground="#09131F" FontWeight="Bold" FontSize="10"/>
+                                                </Border>
+                                                <TextBlock Text="💾 Step 6: Save Your Game &amp; Automated Safety Backups" FontWeight="Bold" Foreground="#10B981" FontSize="13"/>
+                                            </DockPanel>
+                                            <TextBlock Text="1. Click '💾 Save' in the top menu bar whenever you are ready to write changes." Foreground="{StaticResource TextNormal}" FontSize="11.5" Margin="0,0,0,2"/>
+                                            <TextBlock Text="2. Safe Backup Generation: An exact, timestamped copy of your original save file is generated before any edits are written, stored in 'ME Andromeda Save Editor Backup'." Foreground="{StaticResource TextNormal}" FontSize="11.5" Margin="0,0,0,2"/>
+                                            <TextBlock Text="3. One-Click Snapshot Restore: Click '↺ Restore from Backup...' in the toolbar at any time to inspect previous snapshots and revert with a single click." Foreground="{StaticResource TextMuted}" FontSize="11.5"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                </StackPanel>
+                            </ScrollViewer>
+                        </TabItem>
+
+                        <!-- TAB 3: SOFTWARE LICENSE -->
+                        <TabItem Header="&#x1F4DC; Software License">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="4,8,4,8">
+                                <StackPanel Margin="6,0,14,10">
+                                    <Border Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Padding="14,10" Margin="0,0,0,10">
+                                        <DockPanel LastChildFill="True">
+                                            
+                                            <StackPanel>
+                                                <TextBlock Text="RoxasSmithSolutions (RSS) Free Software &amp; Community License" Foreground="#00D2FF" FontWeight="Bold" FontSize="13" Margin="0,0,0,2"/>
+                                                <TextBlock Text="Governed by the laws of England and Wales • Copyright © 2026 RoxasSmithSolutions" Foreground="{StaticResource TextMuted}" FontSize="11"/>
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </Border>
+
+                                    <Border Background="#070D16" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Padding="16">
+                                        <TextBox Text="ROXAS SMITH SOLUTIONS (RSS) COMMUNITY SOFTWARE LICENSE&#x0a;Version 2.0 (Modernized Edition) — England &amp; Wales (United Kingdom)&#x0a;&#x0a;Copyright © 2026 RoxasSmithSolutions (RSS)&#x0a;Author Contact: RoxasSmithSolutions@proton.me&#x0a;&#x0a;--------------------------------------------------------------------------------&#x0a;1. GRANT OF LICENSE&#x0a;Permission is hereby granted, free of charge, to any person obtaining a copy&#x0a;of this software and associated documentation files (the 'Software'), to use,&#x0a;run, copy, and modify copies of the Software for personal, educational, and&#x0a;community gaming purposes, subject to the terms and conditions outlined below.&#x0a;&#x0a;2. ATTRIBUTION &amp; NOTICE RETENTION&#x0a;The above copyright notice, this permission notice, and developer branding&#x0a;crediting RoxasSmithSolutions (RSS) shall be retained in all copies,&#x0a;redistributions, or substantial portions of the Software.&#x0a;&#x0a;3. COMMUNITY MODIFICATIONS &amp; DERIVATIVE WORKS&#x0a;Users and developers are encouraged to inspect, study, and create contributions.&#x0a;Any distributed modified versions must visibly credit RoxasSmithSolutions (RSS)&#x0a;as the original author and clearly indicate that modifications have been made.&#x0a;&#x0a;4. NON-COMMERCIAL &amp; FAN PROJECT USE&#x0a;The Software is an unofficial, independent fan creation provided free of charge&#x0a;for the Mass Effect: Andromeda gaming and modding community. This software is&#x0a;not affiliated with, endorsed by, or sponsored by Electronic Arts Inc. or&#x0a;BioWare. You may not sell, rent, lease, or charge commercial fees for the&#x0a;Software or any of its bundled components.&#x0a;&#x0a;5. DISCLAIMER OF WARRANTY &amp; LIMITATION OF LIABILITY&#x0a;THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR&#x0a;IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,&#x0a;FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. IN NO EVENT SHALL&#x0a;THE AUTHORS OR COPYRIGHT HOLDERS (ROXAS SMITH SOLUTIONS) BE LIABLE FOR ANY&#x0a;CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT,&#x0a;OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR&#x0a;THE USE OR OTHER DEALINGS IN THE SOFTWARE.&#x0a;AUTOMATIC PRE-SAVE BACKUPS ARE PROVIDED AS A COURTESY TO AID SAVE INTEGRITY.&#x0a;&#x0a;6. GOVERNING LAW &amp; JURISDICTION&#x0a;This Agreement and any dispute, claim, or matter arising out of or in connection&#x0a;with it shall be governed by and construed in accordance with the laws of&#x0a;England and Wales (United Kingdom).&#x0a;--------------------------------------------------------------------------------&#x0a;Published by RoxasSmithSolutions (RSS) • Support: RoxasSmithSolutions@proton.me" 
+                                                 FontFamily="Consolas" FontSize="11" Foreground="#A0C0E0" Background="Transparent" BorderThickness="0" TextWrapping="Wrap" IsReadOnly="True"/>
+                                    </Border>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </TabItem>
+
+                    </TabControl>
+
+                    <!-- 4. Footer Actions -->
+                    <Border Grid.Row="3" Background="{StaticResource TitleBarBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="0,1,0,0" Padding="14,10" CornerRadius="0,0,5,5">
+                        <DockPanel LastChildFill="True">
+                            <Button Content="Close" Click="BtnCloseAbout_Click" DockPanel.Dock="Right" HorizontalAlignment="Right" Style="{StaticResource AccentButton}" Padding="22,6" FontSize="12" FontWeight="Bold"/>
+                        </DockPanel>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+
+
+    </Grid>
+</Window>

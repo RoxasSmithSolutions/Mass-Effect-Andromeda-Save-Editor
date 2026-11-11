@@ -1,0 +1,46 @@
+ROXAS SMITH SOLUTIONS (RSS) COMMUNITY SOFTWARE LICENSE
+Version 2.0 (Modernized Edition) — England & Wales (United Kingdom)
+
+Copyright © 2026 RoxasSmithSolutions (RSS)
+Author Contact: RoxasSmithSolutions@proton.me
+
+--------------------------------------------------------------------------------
+1. GRANT OF LICENSE
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the 'Software'), to use,
+run, copy, and modify copies of the Software for personal, educational, and
+community gaming purposes, subject to the terms and conditions outlined below.
+
+2. ATTRIBUTION & NOTICE RETENTION
+The above copyright notice, this permission notice, and developer branding
+crediting RoxasSmithSolutions (RSS) shall be retained in all copies,
+redistributions, or substantial portions of the Software.
+
+3. COMMUNITY MODIFICATIONS & DERIVATIVE WORKS
+Users and developers are encouraged to inspect, study, and create contributions.
+Any distributed modified versions must visibly credit RoxasSmithSolutions (RSS)
+as the original author and clearly indicate that modifications have been made.
+
+4. NON-COMMERCIAL & FAN PROJECT USE
+The Software is an unofficial, independent fan creation provided free of charge
+for the Mass Effect: Andromeda gaming and modding community. This software is
+not affiliated with, endorsed by, or sponsored by Electronic Arts Inc. or
+BioWare. You may not sell, rent, lease, or charge commercial fees for the
+Software or any of its bundled components.
+
+5. DISCLAIMER OF WARRANTY & LIMITATION OF LIABILITY
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS (ROXAS SMITH SOLUTIONS) BE LIABLE FOR ANY
+CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT,
+OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR
+THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+AUTOMATIC PRE-SAVE BACKUPS ARE PROVIDED AS A COURTESY TO AID SAVE INTEGRITY.
+
+6. GOVERNING LAW & JURISDICTION
+This Agreement and any dispute, claim, or matter arising out of or in connection
+with it shall be governed by and construed in accordance with the laws of
+England and Wales (United Kingdom).
+--------------------------------------------------------------------------------
+Published by RoxasSmithSolutions (RSS) • Support: RoxasSmithSolutions@proton.me

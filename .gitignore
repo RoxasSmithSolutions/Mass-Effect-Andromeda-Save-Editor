@@ -1,0 +1,14 @@
+## Build and Output directories
+bin/
+obj/
+scratch/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+
+## Ignore compiled binaries & archives in repo
+**/*.exe
+**/*.7z
+**/*.zip
