@@ -302,6 +302,34 @@ namespace MEABasicSaveEditor
 
         public bool HasTier => (Category == "Weapons" || Category == "Armor" || Category == "Weapon Mods");
         public bool NoTier => !HasTier;
+        public bool IsConsumable => Category == "Consumables";
+        public bool IsNotConsumable => !IsConsumable;
+
+        public string TechOrigin
+        {
+            get
+            {
+                string p = (PartitionName ?? "").ToLowerInvariant();
+                if (p.Contains("remnant") || p.Contains("sweeper") || p.Contains("inferno") || p.Contains("shadow") || p.Contains("equalizer") || p.Contains("cryogauntlet") || p.Contains("heritage"))
+                    return "Remnant";
+                if (p.Contains("helar") || p.Contains("angara") || p.Contains("firaan") || p.Contains("rozerad") || p.Contains("ushior") || p.Contains("isharay") || p.Contains("dhan") || p.Contains("hedy") || p.Contains("kett") || p.Contains("zalkin") || p.Contains("soned") || p.Contains("hroshar"))
+                    return "Heleus";
+                return "Milky Way";
+            }
+        }
+
+        public string TechOriginColor
+        {
+            get
+            {
+                switch (TechOrigin)
+                {
+                    case "Remnant": return "#C084FC";
+                    case "Heleus": return "#38BDF8";
+                    default: return "#FBBF24";
+                }
+            }
+        }
 
         public int TierIndex
         {
@@ -618,6 +646,19 @@ namespace MEABasicSaveEditor
                     return roman[rank];
                 }
                 return $"Tier {rank}";
+            }
+        }
+
+        public string TechOrigin
+        {
+            get
+            {
+                string p = (PartitionName ?? "").ToLowerInvariant();
+                if (p.Contains("remnant") || p.Contains("sweeper") || p.Contains("inferno") || p.Contains("shadow") || p.Contains("equalizer") || p.Contains("cryogauntlet") || p.Contains("heritage"))
+                    return "Remnant";
+                if (p.Contains("helar") || p.Contains("angara") || p.Contains("firaan") || p.Contains("rozerad") || p.Contains("ushior") || p.Contains("isharay") || p.Contains("dhan") || p.Contains("hedy") || p.Contains("kett") || p.Contains("zalkin") || p.Contains("soned") || p.Contains("hroshar"))
+                    return "Heleus";
+                return "Milky Way";
             }
         }
 

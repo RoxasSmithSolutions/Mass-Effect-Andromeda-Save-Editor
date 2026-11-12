@@ -53,7 +53,7 @@ namespace MEABasicSaveEditor
                 }
             };
 
-            // Two-way synchronization of Nexus Level and AVP
+            // Two-way synchronization of Nexus Level, AVP, and Cryo Pod Points
             TxtNexusLevel.TextChanged += (s, e) =>
             {
                 if (!_isSyncingNexusAvp && int.TryParse(TxtNexusLevel.Text, out int nl) && nl >= 1)
@@ -61,6 +61,10 @@ namespace MEABasicSaveEditor
                     _isSyncingNexusAvp = true;
                     TxtAvpPoints.Text = ((Math.Max(1, Math.Min(29, nl)) - 1) * 800).ToString();
                     _isSyncingNexusAvp = false;
+                }
+                if (int.TryParse(TxtNexusLevel.Text, out int nlvl) && TxtCryoPods != null)
+                {
+                    TxtCryoPods.Text = Math.Max(0, nlvl - 1).ToString();
                 }
             };
 
@@ -72,6 +76,10 @@ namespace MEABasicSaveEditor
                     _isSyncingNexusAvp = true;
                     TxtNexusLevel.Text = calcNl.ToString();
                     _isSyncingNexusAvp = false;
+                    if (TxtCryoPods != null)
+                    {
+                        TxtCryoPods.Text = Math.Max(0, calcNl - 1).ToString();
+                    }
                 }
             };
 
@@ -156,7 +164,6 @@ namespace MEABasicSaveEditor
 
                 // Role-Play Card
                 TxtPathfinderName.Text = h.CharacterName;
-                TxtPathfinderIdentity.Text = h.IsFemale ? "Sara Ryder (Female)" : "Scott Ryder (Male)";
                 if (TxtActiveProfileDisplay != null) TxtActiveProfileDisplay.Text = h.ProfileName;
 
                 // Campaign Card
@@ -169,11 +176,12 @@ namespace MEABasicSaveEditor
                 TxtRyderLevel.Text = h.Level.ToString();
                 TxtCurrentXp.Text = h.CurrentXp.ToString();
                 TxtSkillPoints.Text = h.SkillPoints.ToString();
+                TxtNexusLevel.Text = h.NexusLevel.ToString();
+                TxtAvpPoints.Text = h.AvpPoints.ToString();
                 TxtItemLimit.Text = h.ItemLimit.ToString();
 
                 // Progression Card
-                TxtNexusLevel.Text = h.NexusLevel.ToString();
-                TxtAvpPoints.Text = h.AvpPoints.ToString();
+                if (TxtCryoPods != null) TxtCryoPods.Text = Math.Max(0, h.NexusLevel - 1).ToString();
                 TxtCredits.Text = h.Credits.ToString();
                 TxtMilkyWayRD.Text = h.MilkyWayRD.ToString();
                 TxtHeleusRD.Text = h.HeleusRD.ToString();
@@ -241,6 +249,15 @@ namespace MEABasicSaveEditor
             if (!string.Equals(item.Category, _activeArmoryCategory, StringComparison.OrdinalIgnoreCase))
             {
                 return false;
+            }
+
+            // Technology Origin filter
+            if (CmbArmoryOrigin != null && CmbArmoryOrigin.SelectedItem is ComboBoxItem cbiOrigin && cbiOrigin.Content is string origin && !origin.StartsWith("All", StringComparison.OrdinalIgnoreCase))
+            {
+                if (!string.Equals(item.TechOrigin, origin, StringComparison.OrdinalIgnoreCase))
+                {
+                    return false;
+                }
             }
 
             // Sub-category filter
@@ -332,6 +349,12 @@ namespace MEABasicSaveEditor
         }
 
         private void CmbArmorySubCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            _armoryView?.Refresh();
+            UpdateArmoryItemCount();
+        }
+
+        private void CmbArmoryOrigin_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _armoryView?.Refresh();
             UpdateArmoryItemCount();
@@ -531,6 +554,8 @@ namespace MEABasicSaveEditor
             {
                 TxtAddQuantity.Text = (selectedCat == "Consumables") ? "100" : "1";
             }
+
+            UpdateAddTiers();
         }
 
         private void CmbAddCatalogItem_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -548,6 +573,12 @@ namespace MEABasicSaveEditor
             bool isTierable = (selectedCat != "Consumables" && selectedCat != "Fusion Mods");
             if (LblAddTier != null) LblAddTier.Visibility = isTierable ? Visibility.Visible : Visibility.Collapsed;
             if (CmbAddTier != null) CmbAddTier.Visibility = isTierable ? Visibility.Visible : Visibility.Collapsed;
+
+            bool isConsumable = (selectedCat == "Consumables");
+            if (LblAddQty != null) LblAddQty.Visibility = isConsumable ? Visibility.Visible : Visibility.Collapsed;
+            if (BtnAddQtyDown != null) BtnAddQtyDown.Visibility = isConsumable ? Visibility.Visible : Visibility.Collapsed;
+            if (TxtAddQuantity != null) TxtAddQuantity.Visibility = isConsumable ? Visibility.Visible : Visibility.Collapsed;
+            if (BtnAddQtyUp != null) BtnAddQtyUp.Visibility = isConsumable ? Visibility.Visible : Visibility.Collapsed;
 
             if (string.IsNullOrEmpty(selectedName))
             {
@@ -603,9 +634,12 @@ namespace MEABasicSaveEditor
             }
 
             int qty = 1;
-            if (int.TryParse(TxtAddQuantity.Text, out int parsedQty))
+            if (category == "Consumables")
             {
-                qty = Math.Max(1, parsedQty);
+                if (int.TryParse(TxtAddQuantity?.Text, out int parsedQty))
+                {
+                    qty = Math.Max(1, parsedQty);
+                }
             }
 
             var added = _mgr.AddItemToArmory(partition, category, qty);
@@ -615,7 +649,8 @@ namespace MEABasicSaveEditor
                 UpdateCategoryBadges();
                 UpdateArmoryItemCount();
                 string tierStr = (added.TierDisplay != "--") ? $" ({added.TierDisplay})" : "";
-                ShowAlert($"✓ Added {added.DisplayName}{tierStr} (x{qty}) to inventory.");
+                string qtyStr = (category == "Consumables") ? $" (x{qty})" : "";
+                ShowAlert($"✓ Added {added.DisplayName}{tierStr}{qtyStr} to inventory.");
             }
         }
 

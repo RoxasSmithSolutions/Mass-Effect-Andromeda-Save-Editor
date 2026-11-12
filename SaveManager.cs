@@ -756,11 +756,22 @@ namespace MEABasicSaveEditor
             if (CurrentSave?.MetaHeader?.Values != null)
             {
                 bool hasLevel = false;
+                bool hasName1 = false;
+                bool hasName2 = false;
                 for (int i = 0; i < CurrentSave.MetaHeader.Values.Count; i++)
                 {
                     var kv = CurrentSave.MetaHeader.Values[i];
-                    if (kv.Key == 1665193641 || kv.Key == 1382092858)
+                    if (kv.Key == 1665193641)
                     {
+                        hasName1 = true;
+                        if (!string.IsNullOrWhiteSpace(HeaderInfo.CharacterName))
+                        {
+                            CurrentSave.MetaHeader.Values[i] = new KeyValuePair<uint, string>(kv.Key, HeaderInfo.CharacterName);
+                        }
+                    }
+                    else if (kv.Key == 1382092858)
+                    {
+                        hasName2 = true;
                         if (!string.IsNullOrWhiteSpace(HeaderInfo.CharacterName))
                         {
                             CurrentSave.MetaHeader.Values[i] = new KeyValuePair<uint, string>(kv.Key, HeaderInfo.CharacterName);
@@ -771,6 +782,14 @@ namespace MEABasicSaveEditor
                         CurrentSave.MetaHeader.Values[i] = new KeyValuePair<uint, string>(kv.Key, HeaderInfo.Level.ToString());
                         hasLevel = true;
                     }
+                }
+                if (!hasName1 && !string.IsNullOrWhiteSpace(HeaderInfo.CharacterName))
+                {
+                    CurrentSave.MetaHeader.Values.Add(new KeyValuePair<uint, string>(1665193641, HeaderInfo.CharacterName));
+                }
+                if (!hasName2 && !string.IsNullOrWhiteSpace(HeaderInfo.CharacterName))
+                {
+                    CurrentSave.MetaHeader.Values.Add(new KeyValuePair<uint, string>(1382092858, HeaderInfo.CharacterName));
                 }
                 if (!hasLevel)
                 {
@@ -1495,10 +1514,11 @@ namespace MEABasicSaveEditor
                 item = new ItemData();
             }
 
+            int actualQty = (category == "Consumables") ? Math.Max(1, quantity) : 1;
             item.Unknown1 = 0;
             item.PartitionName = partitionName;
             SetItemDefinition(item, def);
-            item.Quantity = quantity;
+            item.Quantity = actualQty;
             item.IsNew = true;
             item.Rarity = -1;
 
@@ -1512,7 +1532,7 @@ namespace MEABasicSaveEditor
                 DisplayName = displayName,
                 Category = category,
                 Tier = def?.Tier ?? 0,
-                Quantity = quantity,
+                Quantity = actualQty,
                 Rarity = -1,
                 IsNew = true,
                 ItemData = item,
@@ -1655,140 +1675,151 @@ namespace MEABasicSaveEditor
         {
             try
             {
-                var files = GetProfOptsFiles(saveDir);
-                if (files.Count == 0) return false;
+                var targetDirs = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                if (!string.IsNullOrEmpty(saveDir) && Directory.Exists(saveDir))
+                    targetDirs.Add(saveDir);
+                if (Directory.Exists(SaveManager.DefaultSaveDirectory))
+                    targetDirs.Add(SaveManager.DefaultSaveDirectory);
 
-                foreach (var profPath in files)
+                bool anyUpdated = false;
+                foreach (var dir in targetDirs)
                 {
-                    try
+                    var files = GetProfOptsFiles(dir);
+                    if (files.Count == 0) continue;
+
+                    foreach (var profPath in files)
                     {
-                        var bytes = File.ReadAllBytes(profPath);
-                        var str = Encoding.ASCII.GetString(bytes);
-
-                        // 1. IsFemalePathfinder
-                        var idxF = str.IndexOf("IsFemalePathfinder\0");
-                        if (idxF >= 0)
+                        try
                         {
-                            var valLenOffset = idxF + 19;
-                            if (valLenOffset + 4 < bytes.Length)
+                            var bytes = File.ReadAllBytes(profPath);
+                            var str = Encoding.ASCII.GetString(bytes);
+
+                            // 1. IsFemalePathfinder
+                            var idxF = str.IndexOf("IsFemalePathfinder\0");
+                            if (idxF >= 0)
                             {
-                                bytes[valLenOffset + 4] = isFemale ? (byte)'1' : (byte)'0';
-                            }
-                        }
-
-                        // 2. GameDifficulty (SP)
-                        int cur = 0;
-                        int idxD = -1;
-                        while ((cur = str.IndexOf("GameDifficulty\0", cur)) >= 0)
-                        {
-                            if (cur >= 2 && str.Substring(cur - 2, 2) != "MP")
-                            {
-                                idxD = cur;
-                                break;
-                            }
-                            cur += 14;
-                        }
-
-                        if (idxD < 0)
-                        {
-                            idxD = str.IndexOf("Difficulty\0");
-                        }
-
-                        if (idxD >= 0)
-                        {
-                            var keyLen = str[idxD] == 'G' ? 15 : 11;
-                            var valLenOffset = idxD + keyLen;
-                            if (valLenOffset + 4 < bytes.Length)
-                            {
-                                char diffChar = (char)('0' + Math.Max(0, Math.Min(4, difficulty)));
-                                bytes[valLenOffset + 4] = (byte)diffChar;
-                            }
-                        }
-
-                        // 3. ProfileIdList (updates Career Name and Career Difficulty for Load Game menu)
-                        var idxP = str.IndexOf("ProfileIdList\0");
-                        if (idxP >= 0 && idxP + 18 <= bytes.Length)
-                        {
-                            int oldListLen = BitConverter.ToInt32(bytes, idxP + 14);
-                            if (oldListLen > 0 && idxP + 18 + oldListLen <= bytes.Length)
-                            {
-                                string listStr = Encoding.ASCII.GetString(bytes, idxP + 18, oldListLen);
-                                string nameToUse = !string.IsNullOrWhiteSpace(characterName) ? characterName.Trim() : "Ryder";
-                                int diffToUse = Math.Max(0, Math.Min(4, difficulty));
-
-                                List<string> candidates = new List<string>();
-                                if (!string.IsNullOrWhiteSpace(careerId))
+                                var valLenOffset = idxF + 19;
+                                if (valLenOffset + 4 < bytes.Length)
                                 {
-                                    candidates.Add(careerId.Trim());
-                                    if (uint.TryParse(careerId, System.Globalization.NumberStyles.HexNumber, null, out uint pDec))
-                                    {
-                                        candidates.Add(pDec.ToString());
-                                    }
-                                    if (uint.TryParse(careerId, out uint decVal))
-                                    {
-                                        candidates.Add(decVal.ToString("x8"));
-                                        candidates.Add(decVal.ToString("X8"));
-                                    }
-                                }
-
-                                int cIdx = -1;
-                                string matchedPrefix = "";
-                                foreach (var cand in candidates)
-                                {
-                                    int found = listStr.IndexOf(cand + ",");
-                                    if (found >= 0)
-                                    {
-                                        cIdx = found;
-                                        matchedPrefix = cand;
-                                        break;
-                                    }
-                                }
-
-                                // Fallback: if single career in list, match it
-                                if (cIdx < 0 && listStr.IndexOf(';') > 0 && listStr.IndexOf(';') == listStr.LastIndexOf(';'))
-                                {
-                                    int firstComma = listStr.IndexOf(',');
-                                    if (firstComma > 0)
-                                    {
-                                        cIdx = 0;
-                                        matchedPrefix = listStr.Substring(0, firstComma);
-                                    }
-                                }
-
-                                if (cIdx >= 0)
-                                {
-                                    int semi = listStr.IndexOf(';', cIdx);
-                                    if (semi > cIdx)
-                                    {
-                                        string newEntry = $"{matchedPrefix},{nameToUse},{nameToUse},{diffToUse};";
-                                        string newListStr = listStr.Substring(0, cIdx) + newEntry + listStr.Substring(semi + 1);
-
-                                        byte[] newListBytes = Encoding.ASCII.GetBytes(newListStr);
-                                        byte[] newLenBytes = BitConverter.GetBytes(newListBytes.Length);
-
-                                        int prefixLen = idxP + 14;
-                                        int suffixStart = idxP + 18 + oldListLen;
-                                        int suffixLen = bytes.Length - suffixStart;
-
-                                        byte[] newFileBytes = new byte[prefixLen + 4 + newListBytes.Length + suffixLen];
-                                        Buffer.BlockCopy(bytes, 0, newFileBytes, 0, prefixLen);
-                                        Buffer.BlockCopy(newLenBytes, 0, newFileBytes, prefixLen, 4);
-                                        Buffer.BlockCopy(newListBytes, 0, newFileBytes, prefixLen + 4, newListBytes.Length);
-                                        Buffer.BlockCopy(bytes, suffixStart, newFileBytes, prefixLen + 4 + newListBytes.Length, suffixLen);
-
-                                        bytes = newFileBytes;
-                                        str = Encoding.ASCII.GetString(bytes);
-                                    }
+                                    bytes[valLenOffset + 4] = isFemale ? (byte)'1' : (byte)'0';
                                 }
                             }
-                        }
 
-                        File.WriteAllBytes(profPath, bytes);
+                            // 2. GameDifficulty (SP)
+                            int cur = 0;
+                            int idxD = -1;
+                            while ((cur = str.IndexOf("GameDifficulty\0", cur)) >= 0)
+                            {
+                                if (cur >= 2 && str.Substring(cur - 2, 2) != "MP")
+                                {
+                                    idxD = cur;
+                                    break;
+                                }
+                                cur += 14;
+                            }
+
+                            if (idxD < 0)
+                            {
+                                idxD = str.IndexOf("Difficulty\0");
+                            }
+
+                            if (idxD >= 0)
+                            {
+                                var keyLen = str[idxD] == 'G' ? 15 : 11;
+                                var valLenOffset = idxD + keyLen;
+                                if (valLenOffset + 4 < bytes.Length)
+                                {
+                                    char diffChar = (char)('0' + Math.Max(0, Math.Min(4, difficulty)));
+                                    bytes[valLenOffset + 4] = (byte)diffChar;
+                                }
+                            }
+
+                            // 3. ProfileIdList (updates Career Name and Career Difficulty for Load Game menu)
+                            var idxP = str.IndexOf("ProfileIdList\0");
+                            if (idxP >= 0 && idxP + 18 <= bytes.Length)
+                            {
+                                int oldListLen = BitConverter.ToInt32(bytes, idxP + 14);
+                                if (oldListLen > 0 && idxP + 18 + oldListLen <= bytes.Length)
+                                {
+                                    string listStr = Encoding.ASCII.GetString(bytes, idxP + 18, oldListLen);
+                                    string nameToUse = !string.IsNullOrWhiteSpace(characterName) ? characterName.Trim() : "Ryder";
+                                    int diffToUse = Math.Max(0, Math.Min(4, difficulty));
+
+                                    List<string> candidates = new List<string>();
+                                    if (!string.IsNullOrWhiteSpace(careerId))
+                                    {
+                                        candidates.Add(careerId.Trim());
+                                        if (uint.TryParse(careerId, System.Globalization.NumberStyles.HexNumber, null, out uint pDec))
+                                        {
+                                            candidates.Add(pDec.ToString());
+                                        }
+                                        if (uint.TryParse(careerId, out uint decVal))
+                                        {
+                                            candidates.Add(decVal.ToString("x8"));
+                                            candidates.Add(decVal.ToString("X8"));
+                                        }
+                                    }
+
+                                    int cIdx = -1;
+                                    string matchedPrefix = "";
+                                    foreach (var cand in candidates)
+                                    {
+                                        int found = listStr.IndexOf(cand + ",");
+                                        if (found >= 0)
+                                        {
+                                            cIdx = found;
+                                            matchedPrefix = cand;
+                                            break;
+                                        }
+                                    }
+
+                                    // Fallback: if single career in list, match it
+                                    if (cIdx < 0 && listStr.IndexOf(';') > 0 && listStr.IndexOf(';') == listStr.LastIndexOf(';'))
+                                    {
+                                        int firstComma = listStr.IndexOf(',');
+                                        if (firstComma > 0)
+                                        {
+                                            cIdx = 0;
+                                            matchedPrefix = listStr.Substring(0, firstComma);
+                                        }
+                                    }
+
+                                    if (cIdx >= 0)
+                                    {
+                                        int semi = listStr.IndexOf(';', cIdx);
+                                        if (semi > cIdx)
+                                        {
+                                            string newEntry = $"{matchedPrefix},{nameToUse},{nameToUse},{diffToUse};";
+                                            string newListStr = listStr.Substring(0, cIdx) + newEntry + listStr.Substring(semi + 1);
+
+                                            byte[] newListBytes = Encoding.ASCII.GetBytes(newListStr);
+                                            byte[] newLenBytes = BitConverter.GetBytes(newListBytes.Length);
+
+                                            int prefixLen = idxP + 14;
+                                            int suffixStart = idxP + 18 + oldListLen;
+                                            int suffixLen = bytes.Length - suffixStart;
+
+                                            byte[] newFileBytes = new byte[prefixLen + 4 + newListBytes.Length + suffixLen];
+                                            Buffer.BlockCopy(bytes, 0, newFileBytes, 0, prefixLen);
+                                            Buffer.BlockCopy(newLenBytes, 0, newFileBytes, prefixLen, 4);
+                                            Buffer.BlockCopy(newListBytes, 0, newFileBytes, prefixLen + 4, newListBytes.Length);
+                                            Buffer.BlockCopy(bytes, suffixStart, newFileBytes, prefixLen + 4 + newListBytes.Length, suffixLen);
+
+                                            bytes = newFileBytes;
+                                            str = Encoding.ASCII.GetString(bytes);
+                                        }
+                                    }
+                                }
+                            }
+
+                            File.WriteAllBytes(profPath, bytes);
+                            anyUpdated = true;
+                        }
+                        catch { }
                     }
-                    catch { }
                 }
 
-                return true;
+                return anyUpdated;
             }
             catch { return false; }
         }

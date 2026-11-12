@@ -701,19 +701,13 @@
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="Auto"/>
                                                     <RowDefinition Height="Auto"/>
-                                                    <RowDefinition Height="Auto"/>
                                                 </Grid.RowDefinitions>
 
                                                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Pathfinder Name:" VerticalAlignment="Center" Margin="0,3"/>
                                                 <TextBox Grid.Row="0" Grid.Column="1" x:Name="TxtPathfinderName" Margin="0,2"/>
 
-                                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Pathfinder Identity:" VerticalAlignment="Center" Margin="0,3"/>
-                                                <TextBox Grid.Row="1" Grid.Column="1" x:Name="TxtPathfinderIdentity" Margin="0,2" IsReadOnly="True" 
-                                                         Background="#0B1522" Foreground="#94A3B8"
-                                                         ToolTip="Campaign Pathfinder identity (Scott or Sara Ryder). Fixed by the game engine for this career."/>
-
-                                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Active Profile / Training:" VerticalAlignment="Center" Margin="0,3"/>
-                                                <Grid Grid.Row="2" Grid.Column="1" Margin="0,2">
+                                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Active Profile / Training:" VerticalAlignment="Center" Margin="0,3"/>
+                                                <Grid Grid.Row="1" Grid.Column="1" Margin="0,2">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="Auto"/>
@@ -793,6 +787,8 @@
                                                     <RowDefinition Height="Auto"/>
                                                     <RowDefinition Height="Auto"/>
                                                     <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
                                                 </Grid.RowDefinitions>
 
                                                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Ryder Level:" VerticalAlignment="Center" Margin="0,3"/>
@@ -807,8 +803,14 @@
                                                          Background="#0B1522" Foreground="#94A3B8"
                                                          ToolTip="In Andromeda, skill points are calculated dynamically by the game from your Ryder Level (+6 SP per level). Raising Ryder Level grants permanent spendable points!"/>
 
-                                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Item Limit:" VerticalAlignment="Center" Margin="0,3"/>
-                                                <TextBox Grid.Row="3" Grid.Column="1" x:Name="TxtItemLimit" TextChanged="TxtItemLimit_TextChanged" Margin="0,2" ToolTip="Inventory item capacity (Default 100, Trade Capacity I: 150, Trade Capacity II: 200)"/>
+                                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Nexus Level:" VerticalAlignment="Center" Margin="0,3"/>
+                                                <TextBox Grid.Row="3" Grid.Column="1" x:Name="TxtNexusLevel" Margin="0,2" ToolTip="Current Nexus Station Level (1-29). 800 AVP per level."/>
+
+                                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Current A.V.P.:" VerticalAlignment="Center" Margin="0,3"/>
+                                                <TextBox Grid.Row="4" Grid.Column="1" x:Name="TxtAvpPoints" Margin="0,2" ToolTip="Andromeda Viability Points (AVP). Automatically synchronizes with Nexus Level (800 AVP per level)."/>
+
+                                                <TextBlock Grid.Row="5" Grid.Column="0" Text="Item Limit:" VerticalAlignment="Center" Margin="0,3"/>
+                                                <TextBox Grid.Row="5" Grid.Column="1" x:Name="TxtItemLimit" TextChanged="TxtItemLimit_TextChanged" Margin="0,2" ToolTip="Inventory item capacity (Default 100, Trade Capacity I: 150, Trade Capacity II: 200)"/>
                                             </Grid>
                                         </StackPanel>
                                     </Border>
@@ -830,26 +832,23 @@
                                                     <RowDefinition Height="Auto"/>
                                                     <RowDefinition Height="Auto"/>
                                                     <RowDefinition Height="Auto"/>
-                                                    <RowDefinition Height="Auto"/>
                                                 </Grid.RowDefinitions>
 
-                                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Nexus Level:" VerticalAlignment="Center" Margin="0,3"/>
-                                                <TextBox Grid.Row="0" Grid.Column="1" x:Name="TxtNexusLevel" Margin="0,2" ToolTip="Current Nexus Station Level (1-30)"/>
+                                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Cryo Pod Points:" VerticalAlignment="Center" Margin="0,3"/>
+                                                <TextBox Grid.Row="0" Grid.Column="1" x:Name="TxtCryoPods" Margin="0,2" IsReadOnly="True" Background="#0B1522" Foreground="#00D2FF" FontWeight="SemiBold"
+                                                         ToolTip="Total Cryo Pod Perk points unlocked via Nexus Viability (1 point earned per Nexus level above 1). Spent in the Nexus Operations terminal to awaken colonists."/>
 
-                                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Current A.V.P.:" VerticalAlignment="Center" Margin="0,3"/>
-                                                <TextBox Grid.Row="1" Grid.Column="1" x:Name="TxtAvpPoints" Margin="0,2" ToolTip="Andromeda Viability Points"/>
+                                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Credits:" VerticalAlignment="Center" Margin="0,3"/>
+                                                <TextBox Grid.Row="1" Grid.Column="1" x:Name="TxtCredits" Margin="0,2"/>
 
-                                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Credits:" VerticalAlignment="Center" Margin="0,3"/>
-                                                <TextBox Grid.Row="2" Grid.Column="1" x:Name="TxtCredits" Margin="0,2"/>
+                                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Milky Way Research:" VerticalAlignment="Center" Margin="0,3"/>
+                                                <TextBox Grid.Row="2" Grid.Column="1" x:Name="TxtMilkyWayRD" Margin="0,2"/>
 
-                                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Milky Way Research:" VerticalAlignment="Center" Margin="0,3"/>
-                                                <TextBox Grid.Row="3" Grid.Column="1" x:Name="TxtMilkyWayRD" Margin="0,2"/>
+                                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Heleus Research:" VerticalAlignment="Center" Margin="0,3"/>
+                                                <TextBox Grid.Row="3" Grid.Column="1" x:Name="TxtHeleusRD" Margin="0,2"/>
 
-                                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Heleus Research:" VerticalAlignment="Center" Margin="0,3"/>
-                                                <TextBox Grid.Row="4" Grid.Column="1" x:Name="TxtHeleusRD" Margin="0,2"/>
-
-                                                <TextBlock Grid.Row="5" Grid.Column="0" Text="Remnant Research:" VerticalAlignment="Center" Margin="0,3"/>
-                                                <TextBox Grid.Row="5" Grid.Column="1" x:Name="TxtRemnantRD" Margin="0,2"/>
+                                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Remnant Research:" VerticalAlignment="Center" Margin="0,3"/>
+                                                <TextBox Grid.Row="4" Grid.Column="1" x:Name="TxtRemnantRD" Margin="0,2"/>
                                             </Grid>
                                         </StackPanel>
                                     </Border>
@@ -872,13 +871,21 @@
                             <!-- Top Controls: Category Pill Navigation, Sub-category Filter & Search -->
                             <Border Grid.Row="0" Background="{StaticResource CardBg}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="4" Padding="12,8" Margin="0,0,0,10">
                                 <DockPanel LastChildFill="True">
-                                    <!-- Right: SubCategory, Search Box, Clear & Count in View -->
+                                    <!-- Right: Origin, SubCategory, Search Box, Clear & Count in View -->
                                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="14,0,0,0">
+                                        <TextBlock Text="Origin:" Foreground="{StaticResource TextMuted}" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <ComboBox x:Name="CmbArmoryOrigin" Width="105" SelectionChanged="CmbArmoryOrigin_SelectionChanged" VerticalAlignment="Center" Margin="0,0,10,0">
+                                            <ComboBoxItem Content="All Origins" IsSelected="True"/>
+                                            <ComboBoxItem Content="Milky Way"/>
+                                            <ComboBoxItem Content="Heleus"/>
+                                            <ComboBoxItem Content="Remnant"/>
+                                        </ComboBox>
+
                                         <TextBlock Text="Sub-Type:" Foreground="{StaticResource TextMuted}" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                                        <ComboBox x:Name="CmbArmorySubCategory" Width="125" SelectionChanged="CmbArmorySubCategory_SelectionChanged" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                        <ComboBox x:Name="CmbArmorySubCategory" Width="120" SelectionChanged="CmbArmorySubCategory_SelectionChanged" VerticalAlignment="Center" Margin="0,0,10,0"/>
 
                                         <TextBlock Text="&#x1F50D; Search:" Foreground="{StaticResource TextMuted}" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                                        <TextBox x:Name="TxtArmorySearch" Width="125" TextChanged="TxtArmorySearch_TextChanged" VerticalAlignment="Center" Margin="0,0,4,0" ToolTip="Type to search items in current category"/>
+                                        <TextBox x:Name="TxtArmorySearch" Width="110" TextChanged="TxtArmorySearch_TextChanged" VerticalAlignment="Center" Margin="0,0,4,0" ToolTip="Type to search items in current category"/>
                                         <Button Content="&#x2715;" Click="BtnClearArmorySearch_Click" Style="{StaticResource MiniBtnStyle}" Width="22" Height="22" Padding="0" Margin="0,0,10,0" ToolTip="Clear search"/>
 
                                         <Border Background="#0C1B2B" BorderBrush="#1C3854" BorderThickness="1" CornerRadius="3" Padding="8,3" VerticalAlignment="Center">
@@ -900,19 +907,30 @@
                             <Grid Grid.Row="1" Margin="0,0,0,10">
                                 <DataGrid x:Name="DgArmoryItems" RowHeight="46">
                                     <DataGrid.Columns>
-                                        <!-- Category Badge -->
-                                        <DataGridTemplateColumn Header="Type" Width="95">
+                                        <!-- SubCategory / Type Badge -->
+                                        <DataGridTemplateColumn Header="Type" Width="105" SortMemberPath="SubCategory">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <Border Background="#142233" BorderBrush="{Binding CategoryColor}" BorderThickness="1" CornerRadius="3" Padding="6,2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4,0">
-                                                        <TextBlock Text="{Binding CategoryTag}" Foreground="{Binding CategoryColor}" FontWeight="Bold" FontSize="10"/>
+                                                        <TextBlock Text="{Binding SubCategory}" Foreground="{Binding CategoryColor}" FontWeight="Bold" FontSize="10"/>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <!-- Technology Origin Badge -->
+                                        <DataGridTemplateColumn Header="Origin" Width="95" SortMemberPath="TechOrigin">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="#142233" BorderBrush="{Binding TechOriginColor}" BorderThickness="1" CornerRadius="3" Padding="6,2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4,0">
+                                                        <TextBlock Text="{Binding TechOrigin}" Foreground="{Binding TechOriginColor}" FontWeight="Bold" FontSize="10"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
 
                                         <!-- Item Name & Partition Resource -->
-                                        <DataGridTemplateColumn Header="Item Name" Width="*" MinWidth="320" SortMemberPath="DisplayName">
+                                        <DataGridTemplateColumn Header="Item Name" Width="*" MinWidth="260" SortMemberPath="DisplayName">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <StackPanel VerticalAlignment="Center" Margin="4,2">
@@ -939,7 +957,7 @@
                                         </DataGridTemplateColumn>
 
                                         <!-- Editable Tier Dropdown -->
-                                        <DataGridTemplateColumn Header="Tier" Width="110" SortMemberPath="Tier">
+                                        <DataGridTemplateColumn Header="Tier" Width="105" SortMemberPath="Tier">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -964,15 +982,19 @@
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
 
-                                        <!-- Quantity Stepper -->
-                                        <DataGridTemplateColumn Header="Quantity" Width="140" SortMemberPath="Quantity">
+                                        <!-- Quantity Column (Stepper for Consumables, fixed 1 for gear) -->
+                                        <DataGridTemplateColumn Header="Quantity" Width="120" SortMemberPath="Quantity">
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                        <Button Content="-" Click="BtnArmoryQtyDown_Click" Style="{StaticResource MiniBtnStyle}" Width="22" Height="22" Padding="0" Margin="0,0,4,0" ToolTip="Decrease quantity"/>
-                                                        <TextBox Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" Width="55" HorizontalContentAlignment="Center" VerticalAlignment="Center" Margin="0,0,4,0"/>
-                                                        <Button Content="+" Click="BtnArmoryQtyUp_Click" Style="{StaticResource MiniBtnStyle}" Width="22" Height="22" Padding="0" ToolTip="Increase quantity"/>
-                                                    </StackPanel>
+                                                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                        <StackPanel Orientation="Horizontal" Visibility="{Binding IsConsumable, Converter={StaticResource BoolToVisConverter}}">
+                                                            <Button Content="-" Click="BtnArmoryQtyDown_Click" Style="{StaticResource MiniBtnStyle}" Width="22" Height="22" Padding="0" Margin="0,0,4,0" ToolTip="Decrease quantity"/>
+                                                            <TextBox Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" Width="50" HorizontalContentAlignment="Center" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                                            <Button Content="+" Click="BtnArmoryQtyUp_Click" Style="{StaticResource MiniBtnStyle}" Width="22" Height="22" Padding="0" ToolTip="Increase quantity"/>
+                                                        </StackPanel>
+                                                        <TextBlock Visibility="{Binding IsNotConsumable, Converter={StaticResource BoolToVisConverter}}"
+                                                                   Text="1" Foreground="{StaticResource TextMuted}" FontWeight="SemiBold" FontSize="12" HorizontalAlignment="Center"/>
+                                                    </Grid>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
@@ -1025,10 +1047,10 @@
                                         <TextBlock x:Name="LblAddTier" Text="Tier:" Foreground="{StaticResource TextMuted}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"/>
                                         <ComboBox x:Name="CmbAddTier" Width="85" Margin="0,0,12,0" VerticalAlignment="Center"/>
 
-                                        <TextBlock Text="Qty:" Foreground="{StaticResource TextMuted}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                                        <Button Content="-" Click="BtnAddQtyDown_Click" Style="{StaticResource MiniBtnStyle}" Width="20" Height="24" Padding="0" Margin="0,0,2,0" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="LblAddQty" Text="Qty:" Foreground="{StaticResource TextMuted}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <Button x:Name="BtnAddQtyDown" Content="-" Click="BtnAddQtyDown_Click" Style="{StaticResource MiniBtnStyle}" Width="20" Height="24" Padding="0" Margin="0,0,2,0" VerticalAlignment="Center"/>
                                         <TextBox x:Name="TxtAddQuantity" Text="1" Width="45" HorizontalContentAlignment="Center" VerticalAlignment="Center" Margin="0,0,2,0"/>
-                                        <Button Content="+" Click="BtnAddQtyUp_Click" Style="{StaticResource MiniBtnStyle}" Width="20" Height="24" Padding="0" VerticalAlignment="Center"/>
+                                        <Button x:Name="BtnAddQtyUp" Content="+" Click="BtnAddQtyUp_Click" Style="{StaticResource MiniBtnStyle}" Width="20" Height="24" Padding="0" VerticalAlignment="Center"/>
                                     </WrapPanel>
                                 </DockPanel>
                             </Border>
@@ -1065,6 +1087,17 @@
                                             </Border>
                                         </StackPanel>
                                     </Grid>
+                                </Border>
+
+                                <!-- GAME ENGINE NOTICE BANNER -->
+                                <Border Background="#1A2738" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="4" Padding="12,8" Margin="0,0,0,12">
+                                    <DockPanel LastChildFill="True">
+                                        <TextBlock Text="ℹ️" FontSize="16" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                        <TextBlock Foreground="#E2E8F0" FontSize="11.5" TextWrapping="Wrap" LineHeight="17">
+                                            <Run Text="Profile Rank Notice: " FontWeight="Bold" Foreground="#00D2FF"/>
+                                            <Run Text="Setting an Active Profile sticks immediately. Profile Ranks (Rank 1–6) are dynamically calculated by the Frostbite engine upon loading based on total skill points allocated to Combat, Biotics, and Tech (e.g. 6 / 24 / 54 / 99 / 156 / 232+ points). Spend Ryder skill points in the respective trees in-game to elevate profile ranks."/>
+                                        </TextBlock>
+                                    </DockPanel>
                                 </Border>
 
                                 <!-- SINGLE-COLUMN FULL-WIDTH PROFILES LIST -->
@@ -1646,7 +1679,7 @@
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <Border Background="#1A3450" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="3" Padding="8,2">
-                                    <TextBlock Text="v2.2 Production Edition" Foreground="#00D2FF" FontWeight="Bold" FontSize="10"/>
+                                    <TextBlock Text="v2.3 Production Edition" Foreground="#00D2FF" FontWeight="Bold" FontSize="10"/>
                                 </Border>
                             </StackPanel>
                         </DockPanel>
@@ -1678,10 +1711,10 @@
                                             <Border Width="4" HorizontalAlignment="Left" Background="#06B6D4" CornerRadius="4,0,0,4"/>
                                             <StackPanel Margin="14,0,0,0">
                                                 <TextBlock Text="Key Features &amp; Editor Capabilities" Foreground="#06B6D4" FontWeight="Bold" FontSize="13" Margin="0,0,0,8"/>
-                                                <TextBlock Text="• Role-Play &amp; Campaign: Customize Ryder's name, gender (Scott or Sara), campaign difficulty level, and current planet or starship location." Foreground="{StaticResource TextNormal}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,3"/>
-                                                <TextBlock Text="• Progression &amp; Stats: Modify Ryder Level, XP, Skill Points, Credits, Nexus Level, A.V.P., and Research Data (Milky Way, Heleus, Remnant)." Foreground="{StaticResource TextNormal}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,3"/>
+                                                <TextBlock Text="• Role-Play &amp; Campaign: Customize Ryder's name, campaign difficulty level, and current planet or starship location." Foreground="{StaticResource TextNormal}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,3"/>
+                                                <TextBlock Text="• Progression &amp; Stats: Modify Ryder Level, XP, Skill Points, Cryo Pod Points, Credits, Nexus Level, A.V.P., and Research Data (Milky Way, Heleus, Remnant)." Foreground="{StaticResource TextNormal}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,3"/>
                                                 <TextBlock Text="• Inventory Capacity Management: Review and customize Ryder's item capacity (100 base, 150 with Trade Capacity I, 200 with Trade Capacity II) to avoid encumbrance." Foreground="{StaticResource TextNormal}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,3"/>
-                                                <TextBlock Text="• Armory &amp; Tier X Gear: Browse, manage, and add Weapons, Weapon Mods, Armor, Fusion Mods, and Consumables. Upgrade any piece of gear up to Tier X (Max Tier) in one click." Foreground="{StaticResource TextNormal}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,3"/>
+                                                <TextBlock Text="• Armory &amp; Tier X Gear: Browse, manage, and add Weapons, Weapon Mods, Armor, Fusion Mods, and Consumables. Filter by Origin (Milky Way, Heleus, Remnant) and Sub-Type (Pistols, Assault Rifles, Shotguns, Snipers, Melee). Upgrade gear up to Tier X in one click." Foreground="{StaticResource TextNormal}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,3"/>
                                                 <TextBlock Text="• Profiles &amp; Dynamic Archetype Themes: Switch active combat profiles with archetype illumination and adjust ranks from Rank 1 to 6 with real-time stat bonuses." Foreground="{StaticResource TextNormal}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,3"/>
                                                 <TextBlock Text="• Resources &amp; Decryption: Edit all 17 minerals, bio/tech materials, augmentations, and add Remnant Decryption Keys to bypass monolith glyph puzzles." Foreground="{StaticResource TextNormal}" FontSize="11" TextWrapping="Wrap"/>
                                             </StackPanel>
@@ -1764,7 +1797,7 @@
                                                 </Border>
                                                 <TextBlock Text="⚙️ Step 2: Edit Campaign, Level &amp; Progression (General Tab)" FontWeight="Bold" Foreground="#00D2FF" FontSize="13"/>
                                             </DockPanel>
-                                            <TextBlock Text="• Role-Play: Change Pathfinder Name, Gender (Scott / Sara), and Active Combat Profile." Foreground="{StaticResource TextNormal}" FontSize="11.5" Margin="0,0,0,2"/>
+                                            <TextBlock Text="• Role-Play: Change Pathfinder Name and Active Combat Profile." Foreground="{StaticResource TextNormal}" FontSize="11.5" Margin="0,0,0,2"/>
                                             <TextBlock Text="• Campaign: Modify Difficulty, Play Time, and Current Location (Tempest, Nexus, or Planet)." Foreground="{StaticResource TextNormal}" FontSize="11.5" Margin="0,0,0,2"/>
                                             <TextBlock Text="• Progression: Set Ryder Level, XP, Skill Points, Credits, Nexus Level, A.V.P., and Research Data." Foreground="{StaticResource TextNormal}" FontSize="11.5" Margin="0,0,0,2"/>
                                             <TextBlock Text="• Item Limit: Manage inventory capacity (100 base, 150/200 with Trade Capacity perks)." Foreground="{StaticResource TextMuted}" FontSize="11.5"/>
