@@ -796,16 +796,8 @@
                                                 </Grid.RowDefinitions>
 
                                                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Ryder Level:" VerticalAlignment="Center" Margin="0,3"/>
-                                                <Grid Grid.Row="0" Grid.Column="1" Margin="0,2">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*"/>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <TextBox Grid.Column="0" x:Name="TxtRyderLevel" ToolTip="Ryder Level (1-132). Raising level automatically grants spendable skill points in-game (+6 SP per level)."/>
-                                                    <Button Grid.Column="1" x:Name="BtnAddLevel" Content="+5 Levels (+30 SP)" Click="BtnAddLevel_Click" 
-                                                            Style="{StaticResource MiniBtnStyle}" Margin="6,0,0,0" Padding="8,2" Height="24"
-                                                            ToolTip="Advance Ryder by 5 levels to immediately unlock 30 skill points in-game"/>
-                                                </Grid>
+                                                <TextBox Grid.Row="0" Grid.Column="1" x:Name="TxtRyderLevel" Margin="0,2" 
+                                                         ToolTip="Ryder Level (1-132). Raising level grants +6 Skill Points per level in-game."/>
 
                                                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Current XP:" VerticalAlignment="Center" Margin="0,3"/>
                                                 <TextBox Grid.Row="1" Grid.Column="1" x:Name="TxtCurrentXp" Margin="0,2" ToolTip="Total current experience points. Synchronized with Ryder Level."/>
@@ -813,7 +805,7 @@
                                                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Unspent Skill Points:" VerticalAlignment="Center" Margin="0,3"/>
                                                 <TextBox Grid.Row="2" Grid.Column="1" x:Name="TxtSkillPoints" Margin="0,2" IsReadOnly="True" 
                                                          Background="#0B1522" Foreground="#94A3B8"
-                                                         ToolTip="In Andromeda, skill points are calculated dynamically by the game from your Ryder Level (+6 SP per level). Raise Ryder Level or click '+5 Levels' to gain spendable points!"/>
+                                                         ToolTip="In Andromeda, skill points are calculated dynamically by the game from your Ryder Level (+6 SP per level). Raising Ryder Level grants permanent spendable points!"/>
 
                                                 <TextBlock Grid.Row="3" Grid.Column="0" Text="Item Limit:" VerticalAlignment="Center" Margin="0,3"/>
                                                 <TextBox Grid.Row="3" Grid.Column="1" x:Name="TxtItemLimit" TextChanged="TxtItemLimit_TextChanged" Margin="0,2" ToolTip="Inventory item capacity (Default 100, Trade Capacity I: 150, Trade Capacity II: 200)"/>
@@ -1654,7 +1646,7 @@
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <Border Background="#1A3450" BorderBrush="#00D2FF" BorderThickness="1" CornerRadius="3" Padding="8,2">
-                                    <TextBlock Text="v2.1 Production Edition" Foreground="#00D2FF" FontWeight="Bold" FontSize="10"/>
+                                    <TextBlock Text="v2.2 Production Edition" Foreground="#00D2FF" FontWeight="Bold" FontSize="10"/>
                                 </Border>
                             </StackPanel>
                         </DockPanel>

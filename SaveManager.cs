@@ -404,7 +404,15 @@ namespace MEABasicSaveEditor
             if (fileName.Contains("-"))
             {
                 var parts = fileName.Split('-');
-                HeaderInfo.CareerId = parts[0].Replace("Career", "");
+                var hexPart = parts[0].Replace("Career", "");
+                if (uint.TryParse(hexPart, System.Globalization.NumberStyles.HexNumber, null, out uint decId))
+                {
+                    HeaderInfo.CareerId = decId.ToString();
+                }
+                else
+                {
+                    HeaderInfo.CareerId = hexPart;
+                }
             }
             else
             {
@@ -417,6 +425,12 @@ namespace MEABasicSaveEditor
                 {
                     switch (item.Key)
                     {
+                        case 313101859:
+                            if (!string.IsNullOrWhiteSpace(item.Value?.ToString()))
+                            {
+                                HeaderInfo.CareerId = item.Value.ToString();
+                            }
+                            break;
                         case 1665193641:
                         case 1382092858:
                             var rawName = item.Value?.ToString() ?? "Scott Ryder";
@@ -1693,21 +1707,60 @@ namespace MEABasicSaveEditor
 
                         // 3. ProfileIdList (updates Career Name and Career Difficulty for Load Game menu)
                         var idxP = str.IndexOf("ProfileIdList\0");
-                        if (idxP >= 0 && idxP + 18 <= bytes.Length && !string.IsNullOrWhiteSpace(careerId))
+                        if (idxP >= 0 && idxP + 18 <= bytes.Length)
                         {
                             int oldListLen = BitConverter.ToInt32(bytes, idxP + 14);
                             if (oldListLen > 0 && idxP + 18 + oldListLen <= bytes.Length)
                             {
                                 string listStr = Encoding.ASCII.GetString(bytes, idxP + 18, oldListLen);
-                                string targetCareer = careerId + ",";
-                                int cIdx = listStr.IndexOf(targetCareer);
+                                string nameToUse = !string.IsNullOrWhiteSpace(characterName) ? characterName.Trim() : "Ryder";
+                                int diffToUse = Math.Max(0, Math.Min(4, difficulty));
+
+                                List<string> candidates = new List<string>();
+                                if (!string.IsNullOrWhiteSpace(careerId))
+                                {
+                                    candidates.Add(careerId.Trim());
+                                    if (uint.TryParse(careerId, System.Globalization.NumberStyles.HexNumber, null, out uint pDec))
+                                    {
+                                        candidates.Add(pDec.ToString());
+                                    }
+                                    if (uint.TryParse(careerId, out uint decVal))
+                                    {
+                                        candidates.Add(decVal.ToString("x8"));
+                                        candidates.Add(decVal.ToString("X8"));
+                                    }
+                                }
+
+                                int cIdx = -1;
+                                string matchedPrefix = "";
+                                foreach (var cand in candidates)
+                                {
+                                    int found = listStr.IndexOf(cand + ",");
+                                    if (found >= 0)
+                                    {
+                                        cIdx = found;
+                                        matchedPrefix = cand;
+                                        break;
+                                    }
+                                }
+
+                                // Fallback: if single career in list, match it
+                                if (cIdx < 0 && listStr.IndexOf(';') > 0 && listStr.IndexOf(';') == listStr.LastIndexOf(';'))
+                                {
+                                    int firstComma = listStr.IndexOf(',');
+                                    if (firstComma > 0)
+                                    {
+                                        cIdx = 0;
+                                        matchedPrefix = listStr.Substring(0, firstComma);
+                                    }
+                                }
+
                                 if (cIdx >= 0)
                                 {
                                     int semi = listStr.IndexOf(';', cIdx);
                                     if (semi > cIdx)
                                     {
-                                        string nameToUse = !string.IsNullOrWhiteSpace(characterName) ? characterName.Trim() : "Ryder";
-                                        string newEntry = $"{careerId},{nameToUse},{nameToUse},{Math.Max(0, Math.Min(4, difficulty))};";
+                                        string newEntry = $"{matchedPrefix},{nameToUse},{nameToUse},{diffToUse};";
                                         string newListStr = listStr.Substring(0, cIdx) + newEntry + listStr.Substring(semi + 1);
 
                                         byte[] newListBytes = Encoding.ASCII.GetBytes(newListStr);

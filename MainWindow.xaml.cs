@@ -87,20 +87,6 @@ namespace MEABasicSaveEditor
             System.Threading.Tasks.Task.Run(() => SaveManager.EnsureCatalogLoaded());
         }
 
-        private void BtnAddLevel_Click(object sender, RoutedEventArgs e)
-        {
-            if (int.TryParse(TxtRyderLevel.Text, out int lvl))
-            {
-                int newLvl = Math.Min(132, lvl + 5);
-                TxtRyderLevel.Text = newLvl.ToString();
-                if (int.TryParse(TxtSkillPoints.Text, out int sp))
-                {
-                    TxtSkillPoints.Text = (sp + 30).ToString();
-                }
-                LogStatus($"Advanced Ryder to Level {newLvl} (+30 Skill Points in-game)");
-            }
-        }
-
         private void LogStatus(string message)
         {
             Dispatcher.Invoke(() =>
